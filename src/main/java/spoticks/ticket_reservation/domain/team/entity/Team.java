@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 public class Team {
 
     @Id
+    @Column(name = "team_id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

@@ -9,6 +9,7 @@ import spoticks.ticket_reservation.domain.stadium.entity.Stadium;
 public class Seat {
 
     @Id
+    @Column(name = "seat_id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
