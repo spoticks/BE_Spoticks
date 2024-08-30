@@ -1,9 +1,16 @@
 package spoticks.ticket_reservation.domain.team.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import spoticks.ticket_reservation.domain.member.entity.Member;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
+@Getter
 @NoArgsConstructor
 public class Team {
 
@@ -12,6 +19,11 @@ public class Team {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String teamName;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "teams")
+    private Set<Member> users = new HashSet<>();
+
 }
