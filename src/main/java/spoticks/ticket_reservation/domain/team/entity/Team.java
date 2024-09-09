@@ -24,6 +24,6 @@ public class Team {
 
     @JsonIgnore
     @ManyToMany(mappedBy = "teams")
-    private Set<Member> users = new HashSet<>();
+    private Set<Member> members = new HashSet<>();
 
 }
