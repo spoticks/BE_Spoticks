@@ -3,10 +3,12 @@ package spoticks.ticket_reservation.domain.seat.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import spoticks.ticket_reservation.domain.game.entity.Game;
 import spoticks.ticket_reservation.domain.seat.entity.Seat;
 import spoticks.ticket_reservation.domain.seat.entity.SeatStatus;
 import spoticks.ticket_reservation.domain.seat.exception.SeatNotFoundException;
 import spoticks.ticket_reservation.domain.seat.repository.SeatRepository;
+import spoticks.ticket_reservation.domain.stadium.entity.StadiumType;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +37,26 @@ public class SeatService {
         return seatRepository.existsByIdAndStatus(seatId, SeatStatus.AVAILABLE);
     }
 
+    public void registerSeat(Game game, StadiumType type) {
+        int ROW = 5;
+        int COL = 2;
+        int num = 1;
+        for (StadiumType.Section section : type.getSections()) {
+            for(int r = 1; r <= ROW; r++) {
+                for (int c = 1; c <= COL; c++) {
+                    Seat seat = Seat.builder()
+                            .game(game)
+                            .seatPrice(section.getPrice())
+                            .seatPosition(section.getSeatPosition())
+                            .seatRow(r)
+                            .seatNumber(num++)
+                            .build();
+                    game.registerSeat(seat);
+                }
+            }
+        }
+    }
+
     public void preemptSeat(long seatId) {
         Seat seat = findById(seatId);
         seat.preempt();
@@ -48,10 +70,6 @@ public class SeatService {
 
     public void releaseSeat(Seat seat) {
         seat.release();
-        seatRepository.save(seat);
-    }
-
-    public void saveSeat(Seat seat) {
         seatRepository.save(seat);
     }
 

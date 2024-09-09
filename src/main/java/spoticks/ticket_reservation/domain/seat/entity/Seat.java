@@ -2,9 +2,14 @@ package spoticks.ticket_reservation.domain.seat.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import spoticks.ticket_reservation.domain.game.entity.Game;
+import spoticks.ticket_reservation.domain.reservation.entity.Reservation;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -16,10 +21,14 @@ public class Seat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id", nullable = false)
     @JsonIgnore
     private Game game;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "seats")
+    private List<Reservation> reservations = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private SeatStatus status;
@@ -31,10 +40,10 @@ public class Seat {
     private String seatPosition;
 
     @Column(nullable = false)
-    private String seatRow;
+    private int seatRow;
 
     @Column(nullable = false)
-    private String seatNumber;
+    private int seatNumber;
 
     public void preempt() {
         status = SeatStatus.PROCESSING;
@@ -48,7 +57,14 @@ public class Seat {
         status = SeatStatus.AVAILABLE;
     }
 
-    public void cancel() {
-        status = SeatStatus.AVAILABLE;
+    @Builder
+    public Seat(Game game, int seatPrice, String seatPosition, int seatRow, int seatNumber) {
+        this.game = game;
+        this.status = SeatStatus.AVAILABLE;
+        this.seatPrice = seatPrice;
+        this.seatPosition = seatPosition;
+        this.seatRow = seatRow;
+        this.seatNumber = seatNumber;
     }
+
 }
