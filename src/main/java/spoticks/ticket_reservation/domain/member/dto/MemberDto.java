@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import spoticks.ticket_reservation.domain.member.entity.Member;
 
 public class MemberDto {
@@ -15,6 +16,7 @@ public class MemberDto {
         @NotEmpty
         private String userName;
 
+        @Setter
         @NotEmpty
         private String password;
 
