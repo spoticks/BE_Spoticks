@@ -39,7 +39,7 @@ public class SeatService {
 
     public void registerSeat(Game game, StadiumType type) {
         int ROW = 5;
-        int COL = 2;
+        int COL = 10;
         int num = 1;
         for (StadiumType.Section section : type.getSections()) {
             for(int r = 1; r <= ROW; r++) {
