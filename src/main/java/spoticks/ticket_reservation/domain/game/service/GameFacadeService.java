@@ -98,8 +98,12 @@ public class GameFacadeService {
     }
 
     public Page<Game> getGamesBySport(int page, String sportName) {
-        Sport sport = sportService.findBySportName(sportName);
-        return gameService.findGamesBySport(page, sport);
+        if (sportName.isEmpty()) {
+            return gameService.getAllGames(page);
+        } else {
+            Sport sport = sportService.findBySportName(sportName);
+            return gameService.findGamesBySport(page, sport);
+        }
     }
 
     public List<GameDto.Res> getGamesByTeam(long teamId) {

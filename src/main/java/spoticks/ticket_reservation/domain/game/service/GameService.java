@@ -23,6 +23,7 @@ import java.util.Optional;
 public class GameService {
 
     private final GameRepository gameRepository;
+    private final int PAGE_SIZE = 8;
 
     @Transactional(readOnly = true)
     public Game findById(Long id) {
@@ -46,9 +47,12 @@ public class GameService {
         return gameRepository.findByTimeOffSaleBetween(now.plusMinutes(30), now.plusDays(6));
     }
 
+    public Page<Game> getAllGames(int page) {
+        return gameRepository.findAll(PageRequest.of(page - 1, PAGE_SIZE, Sort.by("gameStartTime").ascending()));
+    }
+
     @Transactional(readOnly = true)
     public Page<Game> findGamesBySport(int page, Sport sport) {
-        int PAGE_SIZE = 8;
         return gameRepository.findBySport(sport, PageRequest.of(page - 1, PAGE_SIZE, Sort.by("gameStartTime").ascending()));
     }
 

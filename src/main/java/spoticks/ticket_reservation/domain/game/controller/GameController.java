@@ -58,7 +58,7 @@ public class GameController {
     }
 
     @GetMapping("/admin/games")
-    public ResponseEntity getGamesBySport(@RequestParam String sport, @RequestParam(defaultValue = "1") int page) {
+    public ResponseEntity getGamesBySport(@RequestParam(defaultValue = "") String sport, @RequestParam(defaultValue = "1") int page) {
         Page<Game> gamePage = gameFacadeService.getGamesBySport(page, sport);
         List<GameDto.Res> gameList = GameDto.toResList(gamePage.getContent());
         return new ResponseEntity<>(new MultiResponseDto<>(gameList, gamePage), HttpStatus.OK);
