@@ -14,7 +14,7 @@ public class Stadium {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String stadiumName;
 
     @Column(nullable = false)
