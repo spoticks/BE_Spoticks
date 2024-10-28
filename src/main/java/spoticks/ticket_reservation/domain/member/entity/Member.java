@@ -9,7 +9,6 @@ import spoticks.ticket_reservation.domain.member.dto.MemberDto;
 import spoticks.ticket_reservation.domain.team.entity.Team;
 import spoticks.ticket_reservation.global.common.BaseTimeEntity;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,7 +48,7 @@ public class Member extends BaseTimeEntity {
     private Set<Team> teams;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "member_id"))
     @Column(name = "role")
     private List<String> roles;
 
@@ -61,7 +60,7 @@ public class Member extends BaseTimeEntity {
         this.phoneNumber = phoneNumber;
         this.status = MemberStatus.ACTIVE;
         this.teams = new HashSet<>();
-        this.roles = new ArrayList<>();
+        this.roles = List.of("ROLE_MEMBER");
     }
 
     public void updateMemberInfo(MemberDto.ModifyPhoneReq dto) {
