@@ -24,6 +24,13 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
+    public Member findByUsername(String username) {
+        final Optional<Member> member = memberRepository.findByUserName(username);
+        member.orElseThrow(MemberNotFoundException::new);
+        return member.get();
+    }
+
+    @Transactional(readOnly = true)
     public boolean isExistedUserName(String userName) {
         return memberRepository.existsByUserName(userName);
     }
