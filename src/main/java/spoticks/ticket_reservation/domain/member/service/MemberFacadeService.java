@@ -51,6 +51,9 @@ public class MemberFacadeService {
     }
 
     public void signUpMember(MemberDto.SignUpReq dto) {
+        checkUserName(dto.getUserName());
+        checkPhoneNumber(dto.getPhoneNumber());
+
         String encodedPassword = passwordEncoder.encode(dto.getPassword());
         dto.setPassword(encodedPassword);
         memberService.saveMember(dto.toEntity());
