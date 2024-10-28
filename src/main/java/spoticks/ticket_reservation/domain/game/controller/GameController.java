@@ -37,8 +37,8 @@ public class GameController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/games")
-    public ResponseEntity getGamesByTeam(@RequestParam long teamId) {
+    @GetMapping("/teams/{teamId}/games")
+    public ResponseEntity getGamesByTeam(@PathVariable long teamId) {
         List<GameDto.Res> gameList = gameFacadeService.getGamesByTeam(teamId);
         return new ResponseEntity<>(new MultiResponseDto<>(gameList), HttpStatus.OK);
     }
