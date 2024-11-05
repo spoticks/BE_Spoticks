@@ -25,15 +25,15 @@ public class MemberController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping("/join/username")
-    public ResponseEntity checkUserName(@RequestBody MemberDto.SingleReq dto) {
-        memberFacadeService.checkUserName(dto.getInput());
+    @GetMapping("/join/user-name")
+    public ResponseEntity checkUserName(@RequestParam String userName) {
+        memberFacadeService.checkUserName(userName);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/join/phone")
-    public ResponseEntity checkPhoneNumber(@RequestBody MemberDto.SingleReq dto) {
-        memberFacadeService.checkPhoneNumber(dto.getInput());
+    @GetMapping("/join/phone-number")
+    public ResponseEntity checkPhoneNumber(@RequestParam String phoneNumber) {
+        memberFacadeService.checkPhoneNumber(phoneNumber);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
