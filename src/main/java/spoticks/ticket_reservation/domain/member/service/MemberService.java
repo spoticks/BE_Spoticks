@@ -40,11 +40,6 @@ public class MemberService {
         return memberRepository.existsByPhoneNumber(phoneNumber);
     }
 
-    @Transactional(readOnly = true)
-    public boolean isMatchedPassword(String password, Member member) {
-        return member.getPassword().equals(password);
-    }
-
     public void saveMember(Member member) {
         memberRepository.save(member);
     }
