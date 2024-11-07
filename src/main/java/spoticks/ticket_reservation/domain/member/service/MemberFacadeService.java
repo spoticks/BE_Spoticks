@@ -24,6 +24,8 @@ public class MemberFacadeService {
     private final PasswordEncoder passwordEncoder;
 
     public void modifyMemberInfo(Long id, MemberDto.ModifyPhoneReq dto) {
+        checkPhoneNumber(dto.getPhoneNumber());
+
         final Member member = memberService.findById(id);
         member.updateMemberInfo(dto);
         memberService.saveMember(member);
@@ -31,11 +33,14 @@ public class MemberFacadeService {
 
     public void modifyPassword(Long id, MemberDto.ModifyPasswordReq dto) {
         final Member member = memberService.findById(id);
-        if (!memberService.isMatchedPassword(dto.getPassword(), member)) {
+
+        if (passwordEncoder.matches(dto.getPassword(), member.getPassword())) {
+            String encodesNewPassword = passwordEncoder.encode(dto.getNewPassword());
+            member.updatePassword(encodesNewPassword);
+            memberService.saveMember(member);
+        } else {
             throw new PasswordNotMatchedException();
         }
-        member.updatePassword(dto.getNewPassword());
-        memberService.saveMember(member);
     }
 
     public void checkUserName(String userName) {
@@ -66,11 +71,13 @@ public class MemberFacadeService {
 
     public void withdrawalMember(Long id, String password) {
         final Member member = memberService.findById(id);
-        if (!memberService.isMatchedPassword(password, member)) {
+
+        if (passwordEncoder.matches(password, member.getPassword())) {
+            member.withdrawal();
+            memberService.saveMember(member);
+        } else {
             throw new PasswordNotMatchedException();
         }
-        member.withdrawal();
-        memberService.saveMember(member);
     }
 
     public void addMyTeam(Long teamId, Long memberId) {
