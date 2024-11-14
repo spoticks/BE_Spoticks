@@ -73,6 +73,7 @@ public class Member extends BaseTimeEntity {
 
     public void withdrawal() {
         this.status = MemberStatus.WITHDRAWAL;
+        this.roles.clear();
     }
 
 }
