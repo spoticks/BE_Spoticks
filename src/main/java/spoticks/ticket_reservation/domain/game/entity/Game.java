@@ -62,7 +62,7 @@ public class Game extends BaseTimeEntity {
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
         this.gameStartTime = gameStartTime;
-        this.timeOnSale = gameStartTime.minusDays(7).withHour(11);
+        this.timeOnSale = gameStartTime.minusDays(7).withHour(11).withMinute(0);
         this.timeOffSale = gameStartTime.minusHours(2);
     }
 
