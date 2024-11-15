@@ -19,6 +19,6 @@ public interface GameRepository extends JpaRepository<Game, Long> {
 
     Page<Game> findBySport(Sport sport, Pageable pageable);
 
-    List<Game> findByHomeTeamOrAwayTeamOrderByGameStartTime(Team homeTeam, Team awayTeam);
+    Page<Game> findByHomeTeamOrAwayTeamOrderByGameStartTime(Team homeTeam, Team awayTeam, Pageable pageable);
 
 }
