@@ -106,9 +106,9 @@ public class GameFacadeService {
         }
     }
 
-    public List<GameDto.Res> getGamesByTeam(long teamId) {
+    public Page<Game> getGamesByTeam(int page, long teamId) {
         Team team = teamService.findById(teamId);
-        return GameDto.toResList(gameService.findGamesByTeam(team));
+        return gameService.findGamesByTeam(page, team);
     }
 
     public void deleteGame(long gameId) {

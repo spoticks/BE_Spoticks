@@ -57,8 +57,8 @@ public class GameService {
     }
 
     @Transactional(readOnly = true)
-    public List<Game> findGamesByTeam(Team team) {
-        return gameRepository.findByHomeTeamOrAwayTeamOrderByGameStartTime(team, team);
+    public Page<Game> findGamesByTeam(int page, Team team) {
+        return gameRepository.findByHomeTeamOrAwayTeamOrderByGameStartTime(team, team, PageRequest.of(page - 1, PAGE_SIZE, Sort.by("gameStartTime").ascending()));
     }
 
     public void saveGame(Game game) {
