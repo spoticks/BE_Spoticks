@@ -38,9 +38,10 @@ public class GameController {
     }
 
     @GetMapping("/teams/{teamId}/games")
-    public ResponseEntity getGamesByTeam(@PathVariable long teamId) {
-        List<GameDto.Res> gameList = gameFacadeService.getGamesByTeam(teamId);
-        return new ResponseEntity<>(new MultiResponseDto<>(gameList), HttpStatus.OK);
+    public ResponseEntity getGamesByTeam(@PathVariable long teamId, @RequestParam(defaultValue = "1") int page) {
+        Page<Game> gamePage = gameFacadeService.getGamesByTeam(page, teamId);
+        List<GameDto.Res> gameList = GameDto.toResList(gamePage.getContent());
+        return new ResponseEntity<>(new MultiResponseDto<>(gameList, gamePage), HttpStatus.OK);
     }
 
     @PostMapping("/admin/games")
@@ -57,7 +58,7 @@ public class GameController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/admin/games")
+    @GetMapping({"/admin/games", "/games/sports"})
     public ResponseEntity getGamesBySport(@RequestParam(defaultValue = "") String sport, @RequestParam(defaultValue = "1") int page) {
         Page<Game> gamePage = gameFacadeService.getGamesBySport(page, sport);
         List<GameDto.Res> gameList = GameDto.toResList(gamePage.getContent());
