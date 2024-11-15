@@ -8,8 +8,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
+import spoticks.ticket_reservation.global.error.ErrorCode;
+import spoticks.ticket_reservation.global.error.ErrorResponse;
 import spoticks.ticket_reservation.global.login.AuthRequest;
 import spoticks.ticket_reservation.global.login.AuthResponse;
+
 
 @RestController
 @RequestMapping("/auth")
@@ -30,12 +33,11 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(authRequest.getUserName(), authRequest.getPassword())
             );
 
-            String token = authService.createToken(authentication);
-            AuthResponse response = authService.generateAuthResponse(token);
+            AuthResponse response = authService.createToken(authentication);
 
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+            return new ResponseEntity<>(ErrorResponse.of(ErrorCode.UNAUTHORIZED), HttpStatus.UNAUTHORIZED);
         }
     }
 
