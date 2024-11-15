@@ -16,6 +16,9 @@ import spoticks.ticket_reservation.domain.reservation.exception.CancellationPeri
 import spoticks.ticket_reservation.domain.seat.entity.Seat;
 import spoticks.ticket_reservation.domain.seat.exception.SeatAlreadySelectedException;
 import spoticks.ticket_reservation.domain.seat.service.SeatService;
+import spoticks.ticket_reservation.global.error.ErrorCode;
+import spoticks.ticket_reservation.global.error.exception.InvalidValueException;
+import spoticks.ticket_reservation.global.login.AuthorizationUtil;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -58,12 +61,14 @@ public class ReservationFacadeService {
             seatList.add(seat);
         }
 
-        Member member = memberService.findById(dto.getMemberId());
+        long memberId = AuthorizationUtil.getMemberId();
+        final Member member = memberService.findById(memberId);
         reservationService.saveReservation(dto.toEntity(member, game, seatList));
     }
 
-    public ReservationDto.Res getReservation(Long reservationId, Long memberId) {
-        Member member = memberService.findById(memberId);
+    public ReservationDto.Res getReservation(Long reservationId) {
+        long memberId = AuthorizationUtil.getMemberId();
+        final Member member = memberService.findById(memberId);
         Reservation reservation = reservationService.findReservationById(reservationId);
 
         return ReservationDto.Res.builder()
@@ -74,6 +79,11 @@ public class ReservationFacadeService {
 
     public void cancelReservation(Long reservationId) {
         Reservation reservation = reservationService.findReservationById(reservationId);
+        long memberId = AuthorizationUtil.getMemberId();
+
+        if (!reservation.getMember().getId().equals(memberId)) {
+            throw new InvalidValueException("Cannot cancel reservation", ErrorCode.UNAUTHORIZED);
+        }
 
         if (!isCancellationAllowed(reservation)) {
             throw new CancellationPeriodExpiredException();
@@ -91,8 +101,9 @@ public class ReservationFacadeService {
         return LocalDateTime.now().isBefore(reservation.getGame().getTimeOffSale());
     }
 
-    public Page<Reservation> getReservationsByStatus(Long memberId, String status, int page) {
-        Member member = memberService.findById(memberId);
+    public Page<Reservation> getReservationsByStatus(String status, int page) {
+        long memberId = AuthorizationUtil.getMemberId();
+        final Member member = memberService.findById(memberId);
         if (status.equals("COMPLETE")) return reservationService.findReservationsByMember(page, member, ReservationStatus.COMPLETED);
         else return reservationService.findReservationsByMember(page, member, ReservationStatus.CANCELED);
     }

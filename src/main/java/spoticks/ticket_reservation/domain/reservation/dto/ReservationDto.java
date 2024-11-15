@@ -34,9 +34,6 @@ public class ReservationDto {
         @NotNull
         private Integer totalPrice;
 
-        @NotNull
-        private Long memberId;
-
         public Reservation toEntity(Member member, Game game, List<Seat> seatList) {
             return Reservation.builder()
                     .member(member)

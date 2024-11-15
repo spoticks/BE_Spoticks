@@ -33,15 +33,15 @@ public class ReservationController {
     }
 
     @GetMapping("/reservation")
-    public ResponseEntity getReservations(@RequestParam String status, @RequestParam Long memberId, @RequestParam(defaultValue = "1") int page) {
-        Page<Reservation> reservationPage = reservationFacadeService.getReservationsByStatus(memberId, status, page);
+    public ResponseEntity getReservations(@RequestParam String status, @RequestParam(defaultValue = "1") int page) {
+        Page<Reservation> reservationPage = reservationFacadeService.getReservationsByStatus(status, page);
         List<ReservationDto.MyPageRes> reservationList = ReservationDto.toMyPageResList(reservationPage.getContent());
         return new ResponseEntity<>(new MultiResponseDto<>(reservationList, reservationPage), HttpStatus.OK);
     }
 
     @GetMapping("/reservation/{reservationId}")
-    public ResponseEntity getReservation(@PathVariable Long reservationId, @RequestParam Long memberId) {
-        ReservationDto.Res dto = reservationFacadeService.getReservation(reservationId, memberId);
+    public ResponseEntity getReservation(@PathVariable Long reservationId) {
+        ReservationDto.Res dto = reservationFacadeService.getReservation(reservationId);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
