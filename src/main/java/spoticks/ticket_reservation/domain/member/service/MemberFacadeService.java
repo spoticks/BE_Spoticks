@@ -11,6 +11,7 @@ import spoticks.ticket_reservation.domain.member.exception.PhoneNumberDuplicatio
 import spoticks.ticket_reservation.domain.member.exception.UserNameDuplicationException;
 import spoticks.ticket_reservation.domain.team.entity.Team;
 import spoticks.ticket_reservation.domain.team.service.TeamService;
+import spoticks.ticket_reservation.global.login.AuthorizationUtil;
 
 import java.util.List;
 
@@ -23,16 +24,18 @@ public class MemberFacadeService {
     private final TeamService teamService;
     private final PasswordEncoder passwordEncoder;
 
-    public void modifyMemberInfo(Long id, MemberDto.ModifyPhoneReq dto) {
+    public void modifyMemberInfo(MemberDto.ModifyPhoneReq dto) {
+        long memberId = AuthorizationUtil.getMemberId();
         checkPhoneNumber(dto.getPhoneNumber());
 
-        final Member member = memberService.findById(id);
+        final Member member = memberService.findById(memberId);
         member.updateMemberInfo(dto);
         memberService.saveMember(member);
     }
 
-    public void modifyPassword(Long id, MemberDto.ModifyPasswordReq dto) {
-        final Member member = memberService.findById(id);
+    public void modifyPassword(MemberDto.ModifyPasswordReq dto) {
+        long memberId = AuthorizationUtil.getMemberId();
+        final Member member = memberService.findById(memberId);
 
         if (passwordEncoder.matches(dto.getPassword(), member.getPassword())) {
             String encodesNewPassword = passwordEncoder.encode(dto.getNewPassword());
@@ -64,13 +67,15 @@ public class MemberFacadeService {
         memberService.saveMember(dto.toEntity());
     }
 
-    public MemberDto.Res getUserInfo(Long id) {
-        final Member member = memberService.findById(id);
+    public MemberDto.Res getUserInfo() {
+        long memberId = AuthorizationUtil.getMemberId();
+        final Member member = memberService.findById(memberId);
         return new MemberDto.Res(member);
     }
 
-    public void withdrawalMember(Long id, String password) {
-        final Member member = memberService.findById(id);
+    public void withdrawalMember(String password) {
+        long memberId = AuthorizationUtil.getMemberId();
+        final Member member = memberService.findById(memberId);
 
         if (passwordEncoder.matches(password, member.getPassword())) {
             member.withdrawal();
@@ -80,21 +85,24 @@ public class MemberFacadeService {
         }
     }
 
-    public void addMyTeam(Long teamId, Long memberId) {
+    public void addMyTeam(Long teamId) {
         final Team team = teamService.findById(teamId);
+        long memberId = AuthorizationUtil.getMemberId();
         final Member member = memberService.findById(memberId);
         member.getTeams().add(team);
         memberService.saveMember(member);
     }
 
-    public void deleteMyTeam(Long teamId, Long memberId) {
+    public void deleteMyTeam(Long teamId) {
         final Team team = teamService.findById(teamId);
+        long memberId = AuthorizationUtil.getMemberId();
         final Member member = memberService.findById(memberId);
         member.getTeams().remove(team);
         memberService.saveMember(member);
     }
 
-    public List<Team> getMyTeams(Long memberId) {
+    public List<Team> getMyTeams() {
+        long memberId = AuthorizationUtil.getMemberId();
         final Member member = memberService.findById(memberId);
         return member.getTeams().stream().toList();
     }

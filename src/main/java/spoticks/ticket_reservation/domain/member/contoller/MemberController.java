@@ -37,48 +37,48 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PatchMapping("members/{id}")
-    public ResponseEntity updateMemberInfo(@PathVariable Long id , @RequestBody MemberDto.ModifyPhoneReq dto) {
-        memberFacadeService.modifyMemberInfo(id, dto);
+    @PatchMapping("/members/me")
+    public ResponseEntity updateMemberInfo(@RequestBody MemberDto.ModifyPhoneReq dto) {
+        memberFacadeService.modifyMemberInfo(dto);
         String response = "회원정보가 정상적으로 변경되었습니다.";
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PatchMapping("members/{id}/password")
-    public ResponseEntity updateMemberPassword(@PathVariable Long id, @RequestBody MemberDto.ModifyPasswordReq dto) {
-        memberFacadeService.modifyPassword(id, dto);
+    @PatchMapping("/members/password")
+    public ResponseEntity updateMemberPassword(@RequestBody MemberDto.ModifyPasswordReq dto) {
+        memberFacadeService.modifyPassword(dto);
         String response = "비밀번호가 정상적으로 변경되었습니다.";
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("members/{id}")
-    public ResponseEntity getUserInfo(@PathVariable Long id) {
-        MemberDto.Res response = memberFacadeService.getUserInfo(id);
+    @GetMapping("/members/me")
+    public ResponseEntity getUserInfo() {
+        MemberDto.Res response = memberFacadeService.getUserInfo();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("members/{id}")
-    public ResponseEntity withdrawalMember(@PathVariable Long id, @RequestBody MemberDto.SingleReq dto) {
-        memberFacadeService.withdrawalMember(id, dto.getInput());
+    @DeleteMapping("/members")
+    public ResponseEntity withdrawalMember(@RequestBody MemberDto.SingleReq dto) {
+        memberFacadeService.withdrawalMember(dto.getInput());
         String response = "회원탈퇴가 완료되었습니다.";
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/myteam/{teamId}")
-    public ResponseEntity addMyTeam(@PathVariable Long teamId, @RequestParam Long memberId) {
-        memberFacadeService.addMyTeam(teamId, memberId);
+    public ResponseEntity addMyTeam(@PathVariable Long teamId) {
+        memberFacadeService.addMyTeam(teamId);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @DeleteMapping("/myteam/{teamId}")
-    public ResponseEntity deleteMyTeam(@PathVariable Long teamId, @RequestParam Long memberId) {
-        memberFacadeService.deleteMyTeam(teamId, memberId);
+    public ResponseEntity deleteMyTeam(@PathVariable Long teamId) {
+        memberFacadeService.deleteMyTeam(teamId);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/myteam")
-    public ResponseEntity getMyTeam(@RequestParam Long memberId) {
-        List<Team> response = memberFacadeService.getMyTeams(memberId);
+    public ResponseEntity getMyTeam() {
+        List<Team> response = memberFacadeService.getMyTeams();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
