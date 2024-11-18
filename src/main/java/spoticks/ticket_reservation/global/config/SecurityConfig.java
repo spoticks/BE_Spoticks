@@ -13,8 +13,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import spoticks.ticket_reservation.global.config.jwt.CustomUserDetailsService;
-import spoticks.ticket_reservation.global.config.jwt.JwtAuthenticationFilter;
+import spoticks.ticket_reservation.global.auth.CustomUserDetailsService;
+import spoticks.ticket_reservation.global.security.JwtAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
