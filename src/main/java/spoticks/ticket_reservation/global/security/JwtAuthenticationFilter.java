@@ -1,4 +1,4 @@
-package spoticks.ticket_reservation.global.config.jwt;
+package spoticks.ticket_reservation.global.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,7 +11,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import spoticks.ticket_reservation.global.config.CustomUserDetails;
+import spoticks.ticket_reservation.global.auth.CustomUserDetails;
+import spoticks.ticket_reservation.global.auth.CustomUserDetailsService;
 
 import java.io.IOException;
 

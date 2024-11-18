@@ -1,11 +1,11 @@
-package spoticks.ticket_reservation.global.config.jwt;
+package spoticks.ticket_reservation.global.security;
 
 import io.jsonwebtoken.*;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import spoticks.ticket_reservation.global.config.CustomUserDetails;
+import spoticks.ticket_reservation.global.auth.CustomUserDetails;
 import spoticks.ticket_reservation.global.error.ErrorCode;
 import spoticks.ticket_reservation.global.error.exception.InvalidValueException;
 
