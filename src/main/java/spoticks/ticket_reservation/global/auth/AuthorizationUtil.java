@@ -1,8 +1,7 @@
-package spoticks.ticket_reservation.global.login;
+package spoticks.ticket_reservation.global.auth;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import spoticks.ticket_reservation.global.config.CustomUserDetails;
 
 public class AuthorizationUtil {
 

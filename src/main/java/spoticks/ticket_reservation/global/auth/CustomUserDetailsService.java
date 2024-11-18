@@ -1,12 +1,10 @@
-package spoticks.ticket_reservation.global.config.jwt;
+package spoticks.ticket_reservation.global.auth;
 
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import spoticks.ticket_reservation.domain.member.entity.Member;
 import spoticks.ticket_reservation.domain.member.repository.MemberRepository;
-import spoticks.ticket_reservation.global.config.CustomUserDetails;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {

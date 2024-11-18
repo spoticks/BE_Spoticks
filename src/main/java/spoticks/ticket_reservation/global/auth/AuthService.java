@@ -1,11 +1,10 @@
-package spoticks.ticket_reservation.global.config;
+package spoticks.ticket_reservation.global.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import spoticks.ticket_reservation.global.config.jwt.JwtTokenizer;
-import spoticks.ticket_reservation.global.login.AuthResponse;
+import spoticks.ticket_reservation.global.security.JwtTokenizer;
 
 @Service
 @Transactional

@@ -1,4 +1,4 @@
-package spoticks.ticket_reservation.global.config;
+package spoticks.ticket_reservation.global.auth;
 
 
 import org.springframework.http.HttpStatus;
@@ -10,8 +10,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 import spoticks.ticket_reservation.global.error.ErrorCode;
 import spoticks.ticket_reservation.global.error.ErrorResponse;
-import spoticks.ticket_reservation.global.login.AuthRequest;
-import spoticks.ticket_reservation.global.login.AuthResponse;
 
 
 @RestController
