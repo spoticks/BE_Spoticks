@@ -11,7 +11,7 @@ import spoticks.ticket_reservation.domain.member.exception.PhoneNumberDuplicatio
 import spoticks.ticket_reservation.domain.member.exception.UserNameDuplicationException;
 import spoticks.ticket_reservation.domain.team.entity.Team;
 import spoticks.ticket_reservation.domain.team.service.TeamService;
-import spoticks.ticket_reservation.global.login.AuthorizationUtil;
+import spoticks.ticket_reservation.global.auth.AuthorizationUtil;
 
 import java.util.List;
 

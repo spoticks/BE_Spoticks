@@ -18,7 +18,7 @@ import spoticks.ticket_reservation.domain.seat.exception.SeatAlreadySelectedExce
 import spoticks.ticket_reservation.domain.seat.service.SeatService;
 import spoticks.ticket_reservation.global.error.ErrorCode;
 import spoticks.ticket_reservation.global.error.exception.InvalidValueException;
-import spoticks.ticket_reservation.global.login.AuthorizationUtil;
+import spoticks.ticket_reservation.global.auth.AuthorizationUtil;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
