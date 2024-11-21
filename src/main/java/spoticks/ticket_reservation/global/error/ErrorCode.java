@@ -8,10 +8,17 @@ public enum ErrorCode {
     // Common
     INVALID_INPUT_VALUE(400, "Invalid Input Value"),
     INVALID_TYPE_VALUE(400, "Invalid Type Value"),
-    UNAUTHORIZED(401, "Invalid username or password."),
+    UNAUTHORIZED(401, "Invalid username or password"),
     ENTITY_NOT_FOUND(404, " Entity Not Found"),
     INTERNAL_SERVER_ERROR(500, "Server Error"),
     HANDLE_ACCESS_DENIED(403, "Access is Denied"),
+
+    // JWT
+    INVALID_SIGNATURE(401, "Invalid JWT signature"),
+    MALFORMED_TOKEN(401, "JWT Token format incorrect"),
+    TOKEN_EXPIRED(401, "JWT Token expired"),
+    UNSUPPORTED_TOKEN(401, "Unsupported Token"),
+    EMPTY_TOKEN(401, "JWT Token is empty"),
 
     // Member
     MEMBER_NOT_FOUND(404, "Member Not Found"),
