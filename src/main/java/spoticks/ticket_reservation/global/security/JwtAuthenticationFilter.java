@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import spoticks.ticket_reservation.global.auth.CustomUserDetails;
 import spoticks.ticket_reservation.global.auth.CustomUserDetailsService;
+import spoticks.ticket_reservation.global.error.exception.JwtAuthenticationException;
 
 import java.io.IOException;
 
@@ -29,26 +30,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String jwt = getJwtFromRequest(request);
+        try {
+            String jwt = getJwtFromRequest(request);
 
-        if (jwt != null && jwtTokenizer.validateToken(jwt)) {
-            String username = jwtTokenizer.getUsernameFromJWT(jwt);
-            CustomUserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            if (jwt != null && jwtTokenizer.validateToken(jwt)) {
+                String username = jwtTokenizer.getUsernameFromJWT(jwt);
+                CustomUserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            if (request.getRequestURI().startsWith("/admin")) {
-                if(!userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-                    response.sendError(HttpServletResponse.SC_FORBIDDEN);
-                    return;
+                if (request.getRequestURI().startsWith("/admin")) {
+                    if(!userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+                        response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                        return;
+                    }
+                }
+
+                if (userDetails != null) {
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
-
-            if (userDetails != null) {
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+        } catch (JwtAuthenticationException ex) {
+            request.setAttribute("errorCode", ex.getErrorCode());
+            SecurityContextHolder.clearContext();
+            throw ex;
         }
 
         filterChain.doFilter(request, response);
