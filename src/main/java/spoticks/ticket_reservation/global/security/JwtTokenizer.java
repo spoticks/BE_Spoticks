@@ -7,7 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import spoticks.ticket_reservation.global.auth.CustomUserDetails;
 import spoticks.ticket_reservation.global.error.ErrorCode;
-import spoticks.ticket_reservation.global.error.exception.InvalidValueException;
+import spoticks.ticket_reservation.global.error.exception.JwtAuthenticationException;
 
 import java.util.Base64;
 import java.util.Date;
@@ -53,11 +53,11 @@ public class JwtTokenizer {
             Jwts.parser().setSigningKey(encodeBase64(JWT_SECRET)).parseClaimsJws(authToken);
             return true;
         } catch (SignatureException ex) {
-            throw new InvalidValueException("Invalid JWT signature", ErrorCode.UNAUTHORIZED);
+            throw new JwtAuthenticationException(ErrorCode.INVALID_SIGNATURE);
         } catch (MalformedJwtException ex) {
-            throw new InvalidValueException("JWT token format incorrect", ErrorCode.UNAUTHORIZED);
+            throw new JwtAuthenticationException(ErrorCode.MALFORMED_TOKEN);
         } catch (ExpiredJwtException ex) {
-            throw new InvalidValueException("JWT already expired", ErrorCode.UNAUTHORIZED);
+            throw new JwtAuthenticationException(ErrorCode.TOKEN_EXPIRED);
         }
     }
 
