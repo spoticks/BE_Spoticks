@@ -111,8 +111,6 @@ public class GameDto {
         private final String awayTeamName;
         private final LocalDateTime gameStartTime;
         private final String stadiumName;
-        private final double latitude;
-        private final double longitude;
 
         public SimpleRes(Game game) {
             this.gameId = game.getId();
@@ -120,16 +118,41 @@ public class GameDto {
             this.awayTeamName = game.getAwayTeam().getTeamName();
             this.gameStartTime = game.getGameStartTime();
             this.stadiumName = game.getStadium().getStadiumName();
+        }
+
+    }
+
+    @Getter
+    public static class WithLocation {
+
+        private final long gameId;
+        private final String homeTeamName;
+        private final String awayTeamName;
+        private final LocalDateTime gameStartTime;
+        private final LocalDateTime timeOnSale;
+        private final LocalDateTime timeOffSale;
+        private final String stadiumName;
+        private final double latitude;
+        private final double longitude;
+
+        public WithLocation(Game game) {
+            this.gameId = game.getId();
+            this.homeTeamName = game.getHomeTeam().getTeamName();
+            this.awayTeamName = game.getAwayTeam().getTeamName();
+            this.gameStartTime = game.getGameStartTime();
+            this.timeOnSale = game.getTimeOnSale();
+            this.timeOffSale = game.getTimeOffSale();
+            this.stadiumName = game.getStadium().getStadiumName();
             this.latitude = game.getStadium().getLatitude();
             this.longitude = game.getStadium().getLongitude();
         }
 
     }
 
-    public static List<SimpleRes> toSimpleResList(List<Game> games) {
-        List<SimpleRes> resList = new ArrayList<>();
+    public static List<WithLocation> toWithLocationList(List<Game> games) {
+        List<WithLocation> resList = new ArrayList<>();
         for (Game game : games) {
-            resList.add(new SimpleRes(game));
+            resList.add(new WithLocation(game));
         }
         return resList;
     }
