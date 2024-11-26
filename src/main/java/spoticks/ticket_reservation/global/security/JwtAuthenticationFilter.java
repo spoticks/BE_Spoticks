@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import spoticks.ticket_reservation.global.auth.CustomUserDetails;
 import spoticks.ticket_reservation.global.auth.CustomUserDetailsService;
+import spoticks.ticket_reservation.global.error.exception.AccessDeniedException;
 import spoticks.ticket_reservation.global.error.exception.JwtAuthenticationException;
 
 import java.io.IOException;
@@ -39,8 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 if (request.getRequestURI().startsWith("/admin")) {
                     if(!userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-                        response.sendError(HttpServletResponse.SC_FORBIDDEN);
-                        return;
+                        throw new AccessDeniedException("You do not have permission to access this resource");
                     }
                 }
 
@@ -52,8 +52,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
-        } catch (JwtAuthenticationException ex) {
-            request.setAttribute("errorCode", ex.getErrorCode());
+        } catch (JwtAuthenticationException | AccessDeniedException ex) {
+            if (ex instanceof JwtAuthenticationException) {
+                request.setAttribute("errorCode", ((JwtAuthenticationException) ex).getErrorCode());
+            } else {
+                request.setAttribute("errorCode", ((AccessDeniedException) ex).getErrorCode());
+            }
+
             SecurityContextHolder.clearContext();
             throw ex;
         }
