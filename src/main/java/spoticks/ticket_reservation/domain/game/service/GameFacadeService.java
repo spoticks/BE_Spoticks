@@ -57,8 +57,8 @@ public class GameFacadeService {
         return gameService.pickArbitaryGame();
     }
 
-    public List<GameDto.SimpleRes> getThisWeekGames() {
-        return GameDto.toSimpleResList(gameService.findGamesByTimeOffSale());
+    public List<GameDto.WithLocation> getThisWeekGames() {
+        return GameDto.toWithLocationList(gameService.findGamesByTimeOffSale());
     }
 
     public GameDto.WithSeatList getGameWithSeatList(long gameId, String seatPosition) {

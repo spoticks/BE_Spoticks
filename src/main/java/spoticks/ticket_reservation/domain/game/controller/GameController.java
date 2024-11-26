@@ -27,7 +27,7 @@ public class GameController {
 
     @GetMapping("/games/weekly")
     public ResponseEntity getThisWeekGames() {
-        List<GameDto.SimpleRes> gameList = gameFacadeService.getThisWeekGames();
+        List<GameDto.WithLocation> gameList = gameFacadeService.getThisWeekGames();
         return new ResponseEntity<>(new MultiResponseDto<>(gameList), HttpStatus.OK);
     }
 
