@@ -20,11 +20,15 @@ public class JwtEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-
         ErrorCode errorCode = (ErrorCode) request.getAttribute("errorCode");
-        if(errorCode == null) {
+
+        if (errorCode == null) {
             errorCode = ErrorCode.UNAUTHORIZED;
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        } else if (errorCode == ErrorCode.HANDLE_ACCESS_DENIED) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
 
         ErrorResponse errorResponse = ErrorResponse.of(errorCode);
