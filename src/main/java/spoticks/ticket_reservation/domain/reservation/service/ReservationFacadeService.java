@@ -16,8 +16,7 @@ import spoticks.ticket_reservation.domain.reservation.exception.CancellationPeri
 import spoticks.ticket_reservation.domain.seat.entity.Seat;
 import spoticks.ticket_reservation.domain.seat.exception.SeatAlreadySelectedException;
 import spoticks.ticket_reservation.domain.seat.service.SeatService;
-import spoticks.ticket_reservation.global.error.ErrorCode;
-import spoticks.ticket_reservation.global.error.exception.InvalidValueException;
+import spoticks.ticket_reservation.global.error.exception.AccessDeniedException;
 import spoticks.ticket_reservation.global.auth.AuthorizationUtil;
 
 import java.time.LocalDateTime;
@@ -67,9 +66,14 @@ public class ReservationFacadeService {
     }
 
     public ReservationDto.Res getReservation(Long reservationId) {
-        long memberId = AuthorizationUtil.getMemberId();
-        final Member member = memberService.findById(memberId);
         Reservation reservation = reservationService.findReservationById(reservationId);
+        long memberId = AuthorizationUtil.getMemberId();
+
+        if (!reservation.getMember().getId().equals(memberId)) {
+            throw new AccessDeniedException("Cannot access this reservation");
+        }
+
+        final Member member = memberService.findById(memberId);
 
         return ReservationDto.Res.builder()
                 .reservation(reservation)
@@ -82,7 +86,7 @@ public class ReservationFacadeService {
         long memberId = AuthorizationUtil.getMemberId();
 
         if (!reservation.getMember().getId().equals(memberId)) {
-            throw new InvalidValueException("Cannot cancel reservation", ErrorCode.UNAUTHORIZED);
+            throw new AccessDeniedException("Cannot cancel reservation");
         }
 
         if (!isCancellationAllowed(reservation)) {
