@@ -46,8 +46,13 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/join/**", "/teams/**", "/games/mostPopular", "/games/weekly", "/games/sports").permitAll()
-                        .anyRequest().authenticated())
+                        .requestMatchers("/auth/**", "/join", "/join/**",
+                                "/teams/{teamId}/games", "teams/{teamId}/stadium",  "/games/mostPopular", "/games/weekly", "/games/sports").permitAll()
+                        .requestMatchers("/members", "/members/me", "/members/password", "/myteam", "/myteam/{teamId}",
+                                "/reservation", "/reservation/{reservationId}",
+                                "/games/{gameId}/preempt", "/games/{gameId}/reserve", "/games/{gameId}",
+                                "/admin/games/**").authenticated()
+                        .anyRequest().denyAll())
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtEntryPoint))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
