@@ -19,12 +19,12 @@ public class JwtEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
-                         AuthenticationException authException) throws IOException, ServletException {
+                         AuthenticationException authException) throws IOException {
         ErrorCode errorCode = (ErrorCode) request.getAttribute("errorCode");
 
         if (errorCode == null) {
-            errorCode = ErrorCode.UNAUTHORIZED;
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            errorCode = ErrorCode.PAGE_NOT_FOUND;
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         } else if (errorCode == ErrorCode.HANDLE_ACCESS_DENIED) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         } else {
