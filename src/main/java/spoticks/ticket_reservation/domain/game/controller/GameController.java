@@ -12,6 +12,7 @@ import spoticks.ticket_reservation.domain.game.service.GameFacadeService;
 import spoticks.ticket_reservation.global.common.MultiResponseDto;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,8 +22,14 @@ public class GameController {
 
     @GetMapping("/games/mostPopular")
     public ResponseEntity getMostPopular() {
-        GameDto.Res response = new GameDto.Res(gameFacadeService.getMostPopular());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        Optional<Game> game = gameFacadeService.getMostPopular();
+
+        if (game.isPresent()) {
+            GameDto.Res response = new GameDto.Res(game.get());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
     }
 
     @GetMapping("/games/weekly")
