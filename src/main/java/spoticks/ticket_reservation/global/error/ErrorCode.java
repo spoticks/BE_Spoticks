@@ -9,7 +9,8 @@ public enum ErrorCode {
     INVALID_INPUT_VALUE(400, "Invalid Input Value"),
     INVALID_TYPE_VALUE(400, "Invalid Type Value"),
     UNAUTHORIZED(401, "Invalid username or password"),
-    ENTITY_NOT_FOUND(404, " Entity Not Found"),
+    ENTITY_NOT_FOUND(404, "Entity Not Found"),
+    PAGE_NOT_FOUND(404, "Requested endpoint does not exist"),
     INTERNAL_SERVER_ERROR(500, "Server Error"),
     HANDLE_ACCESS_DENIED(403, "Access is Denied"),
 
