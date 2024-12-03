@@ -33,12 +33,9 @@ public class GameService {
     }
 
     @Transactional(readOnly = true)
-    public Game pickArbitaryGame() {
+    public Optional<Game> pickMainGame() {
         LocalDateTime now = LocalDateTime.now();
-        final Optional<Game> game = gameRepository.
-                findFirstByTimeOnSaleBeforeAndTimeOffSaleAfter(now, now.plusHours(1));
-        game.orElseThrow(GameNotFoundException::new);
-        return game.get();
+        return gameRepository.findFirstByTimeOnSaleBeforeAndTimeOffSaleAfter(now, now.plusHours(1));
     }
 
     @Transactional(readOnly = true)
@@ -48,17 +45,20 @@ public class GameService {
     }
 
     public Page<Game> getAllGames(int page) {
-        return gameRepository.findAll(PageRequest.of(page - 1, PAGE_SIZE, Sort.by("gameStartTime").ascending()));
+        return gameRepository.findAll(PageRequest.of(
+                page - 1, PAGE_SIZE, Sort.by("gameStartTime").ascending()));
     }
 
     @Transactional(readOnly = true)
     public Page<Game> findGamesBySport(int page, Sport sport) {
-        return gameRepository.findBySport(sport, PageRequest.of(page - 1, PAGE_SIZE, Sort.by("gameStartTime").ascending()));
+        return gameRepository.findBySport(sport, PageRequest.of(
+                page - 1, PAGE_SIZE, Sort.by("gameStartTime").ascending()));
     }
 
     @Transactional(readOnly = true)
     public Page<Game> findGamesByTeam(int page, Team team) {
-        return gameRepository.findByHomeTeamOrAwayTeamOrderByGameStartTime(team, team, PageRequest.of(page - 1, PAGE_SIZE, Sort.by("gameStartTime").ascending()));
+        return gameRepository.findByHomeTeamOrAwayTeamOrderByGameStartTime(
+                team, team, PageRequest.of(page - 1, PAGE_SIZE, Sort.by("gameStartTime").ascending()));
     }
 
     public void saveGame(Game game) {
