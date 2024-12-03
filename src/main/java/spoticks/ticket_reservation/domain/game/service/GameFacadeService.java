@@ -19,6 +19,7 @@ import spoticks.ticket_reservation.domain.team.service.TeamService;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -53,8 +54,8 @@ public class GameFacadeService {
         return new GameDto.Res(gameService.findById(gameId));
     }
 
-    public Game getMostPopular() {
-        return gameService.pickArbitaryGame();
+    public Optional<Game> getMostPopular() {
+        return gameService.pickMainGame();
     }
 
     public List<GameDto.WithLocation> getThisWeekGames() {
