@@ -7,15 +7,15 @@ import spoticks.ticket_reservation.domain.game.entity.Game;
 import spoticks.ticket_reservation.domain.sport.entity.Sport;
 import spoticks.ticket_reservation.domain.team.entity.Team;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public interface GameRepository extends JpaRepository<Game, Long> {
 
-    Optional<Game> findFirstByTimeOnSaleBeforeAndTimeOffSaleAfter(LocalDateTime timeOnSaleBefore, LocalDateTime timeOffSaleAfter);
+    Optional<Game> findFirstByTimeOnSaleBeforeAndTimeOffSaleAfter(ZonedDateTime timeOnSaleBefore, ZonedDateTime timeOffSaleAfter);
 
-    List<Game> findByTimeOffSaleBetween(LocalDateTime start, LocalDateTime end);
+    List<Game> findByTimeOffSaleBetween(ZonedDateTime start, ZonedDateTime end);
 
     Page<Game> findBySport(Sport sport, Pageable pageable);
 
