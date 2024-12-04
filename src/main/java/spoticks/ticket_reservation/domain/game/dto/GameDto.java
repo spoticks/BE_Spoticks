@@ -11,7 +11,7 @@ import spoticks.ticket_reservation.domain.stadium.entity.Stadium;
 import spoticks.ticket_reservation.domain.stadium.entity.StadiumType;
 import spoticks.ticket_reservation.domain.team.entity.Team;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class GameDto {
         private Long awayTeamId;
 
         @Valid
-        private LocalDateTime gameStartTime;
+        private ZonedDateTime gameStartTime;
 
     }
 
@@ -44,7 +44,7 @@ public class GameDto {
         private String sport;
         private long homeTeamId;
         private long awayTeamId;
-        private LocalDateTime gameStartTime;
+        private ZonedDateTime gameStartTime;
 
     }
 
@@ -56,7 +56,7 @@ public class GameDto {
         private Sport sport;
         private Team homeTeam;
         private Team awayTeam;
-        private LocalDateTime gameStartTime;
+        private ZonedDateTime gameStartTime;
 
     }
 
@@ -74,20 +74,20 @@ public class GameDto {
     public static class Res {
 
         private final long gameId;
-        private final String stadium;
+        private final String stadiumName;
         private final String sport;
-        private final String homeTeam;
-        private final String awayTeam;
-        private final LocalDateTime gameStartTime;
-        private final LocalDateTime timeOnSale;
-        private final LocalDateTime timeOffSale;
+        private final String homeTeamName;
+        private final String awayTeamName;
+        private final ZonedDateTime gameStartTime;
+        private final ZonedDateTime timeOnSale;
+        private final ZonedDateTime timeOffSale;
 
         public Res(Game game) {
             this.gameId = game.getId();
-            this.stadium = game.getStadium().getStadiumName();
+            this.stadiumName = game.getStadium().getStadiumName();
             this.sport = game.getSport().getSportName();
-            this.homeTeam = game.getHomeTeam().getTeamName();
-            this.awayTeam = game.getAwayTeam().getTeamName();
+            this.homeTeamName = game.getHomeTeam().getTeamName();
+            this.awayTeamName = game.getAwayTeam().getTeamName();
             this.gameStartTime = game.getGameStartTime();
             this.timeOnSale = game.getTimeOnSale();
             this.timeOffSale = game.getTimeOffSale();
@@ -109,7 +109,7 @@ public class GameDto {
         private final long gameId;
         private final String homeTeamName;
         private final String awayTeamName;
-        private final LocalDateTime gameStartTime;
+        private final ZonedDateTime gameStartTime;
         private final String stadiumName;
 
         public SimpleRes(Game game) {
@@ -128,9 +128,9 @@ public class GameDto {
         private final long gameId;
         private final String homeTeamName;
         private final String awayTeamName;
-        private final LocalDateTime gameStartTime;
-        private final LocalDateTime timeOnSale;
-        private final LocalDateTime timeOffSale;
+        private final ZonedDateTime gameStartTime;
+        private final ZonedDateTime timeOnSale;
+        private final ZonedDateTime timeOffSale;
         private final String stadiumName;
         private final double latitude;
         private final double longitude;
