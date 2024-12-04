@@ -12,7 +12,7 @@ import spoticks.ticket_reservation.domain.stadium.entity.Stadium;
 import spoticks.ticket_reservation.domain.team.entity.Team;
 import spoticks.ticket_reservation.global.common.BaseTimeEntity;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,20 +43,20 @@ public class Game extends BaseTimeEntity {
     private Team awayTeam;
 
     @Column(nullable = false)
-    private LocalDateTime gameStartTime;
+    private ZonedDateTime gameStartTime;
 
     @Column(nullable = false)
-    private LocalDateTime timeOnSale;
+    private ZonedDateTime timeOnSale;
 
     @Column(nullable = false)
-    private LocalDateTime timeOffSale;
+    private ZonedDateTime timeOffSale;
 
     @OneToMany(mappedBy = "game", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     @JsonIgnore
     private List<Seat> seats = new ArrayList<>();
 
     @Builder
-    public Game(Stadium stadium, Sport sport, Team homeTeam, Team awayTeam, LocalDateTime gameStartTime) {
+    public Game(Stadium stadium, Sport sport, Team homeTeam, Team awayTeam, ZonedDateTime gameStartTime) {
         this.stadium = stadium;
         this.sport = sport;
         this.homeTeam = homeTeam;
