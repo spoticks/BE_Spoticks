@@ -34,6 +34,8 @@ public enum ErrorCode {
 
     // Reservation
     RESERVATION_EXPIRE(400, "Reservation already expired"),
+    RESERVATION_NOT_AVAILABLE(400, "Reservation is not available at this time"),
+    RESERVATION_NOT_FOUND(404, "Reservation Not Found"),
 
     // Seat
     SEAT_ALREADY_SELECTED(400, "Seat already selected"),
