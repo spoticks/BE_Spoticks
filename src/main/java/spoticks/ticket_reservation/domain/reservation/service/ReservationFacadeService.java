@@ -19,7 +19,7 @@ import spoticks.ticket_reservation.domain.seat.service.SeatService;
 import spoticks.ticket_reservation.global.error.exception.AccessDeniedException;
 import spoticks.ticket_reservation.global.auth.AuthorizationUtil;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,7 +102,7 @@ public class ReservationFacadeService {
     }
 
     public boolean isCancellationAllowed(Reservation reservation) {
-        return LocalDateTime.now().isBefore(reservation.getGame().getTimeOffSale());
+        return ZonedDateTime.now().isBefore(reservation.getGame().getTimeOffSale());
     }
 
     public Page<Reservation> getReservationsByStatus(String status, int page) {

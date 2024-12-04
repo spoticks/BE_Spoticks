@@ -13,7 +13,7 @@ import spoticks.ticket_reservation.domain.game.repository.GameRepository;
 import spoticks.ticket_reservation.domain.sport.entity.Sport;
 import spoticks.ticket_reservation.domain.team.entity.Team;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,13 +34,13 @@ public class GameService {
 
     @Transactional(readOnly = true)
     public Optional<Game> pickMainGame() {
-        LocalDateTime now = LocalDateTime.now();
+        ZonedDateTime now = ZonedDateTime.now();
         return gameRepository.findFirstByTimeOnSaleBeforeAndTimeOffSaleAfter(now, now.plusHours(1));
     }
 
     @Transactional(readOnly = true)
     public List<Game> findGamesByTimeOffSale() {
-        LocalDateTime now = LocalDateTime.now();
+        ZonedDateTime now = ZonedDateTime.now();
         return gameRepository.findByTimeOffSaleBetween(now.plusMinutes(30), now.plusDays(6));
     }
 
@@ -72,12 +72,12 @@ public class GameService {
         gameRepository.delete(game);
     }
 
-    public boolean isPossibleDeleteGame(LocalDateTime timeOnSale) {
-        return LocalDateTime.now().isBefore(timeOnSale.minusHours(2));
+    public boolean isPossibleDeleteGame(ZonedDateTime timeOnSale) {
+        return ZonedDateTime.now().isBefore(timeOnSale.minusHours(2));
     }
 
     public boolean isGameOpen(Game game) {
-        LocalDateTime now = LocalDateTime.now();
+        ZonedDateTime now = ZonedDateTime.now();
         return now.isAfter(game.getTimeOnSale()) && now.isBefore(game.getTimeOffSale());
     }
 
