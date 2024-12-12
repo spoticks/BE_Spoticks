@@ -1,9 +1,11 @@
 package spoticks.ticket_reservation.domain.stadium.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @NoArgsConstructor
 public class Stadium {
 
@@ -14,4 +16,15 @@ public class Stadium {
 
     @Column(nullable = false)
     private String stadiumName;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private StadiumType stadiumType;
+
+    @Column
+    private Double latitude;
+
+    @Column
+    private Double longitude;
+
 }

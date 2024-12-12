@@ -1,4 +1,28 @@
 spring:
-  profiles:
-    active:
-      - dev
+  web:
+    resources:
+      static-locations: []
+      add-mappings: false
+  datasource:
+    url: jdbc:mysql://${SPOTICKS_DB_ENDPOINT}?useSSL=false&serverTimezone=Asia/Seoul
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: admin
+    password: ${SPOTICKS_DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  jackson:
+    time-zone: Asia/Seoul
+logging:
+  level:
+    org.hibernate.SQL: debug
+jwt:
+  secret: ${JWT_SECRET_KEY}

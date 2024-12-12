@@ -1,0 +1,87 @@
+package spoticks.ticket_reservation.domain.game.controller;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import spoticks.ticket_reservation.domain.game.dto.GameDto;
+import spoticks.ticket_reservation.domain.game.entity.Game;
+import spoticks.ticket_reservation.domain.game.service.GameFacadeService;
+import spoticks.ticket_reservation.global.common.MultiResponseDto;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequiredArgsConstructor
+public class GameController {
+
+    private final GameFacadeService gameFacadeService;
+
+    @GetMapping("/games/mostPopular")
+    public ResponseEntity getMostPopular() {
+        Optional<Game> game = gameFacadeService.getMostPopular();
+
+        if (game.isPresent()) {
+            GameDto.Res response = new GameDto.Res(game.get());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/games/weekly")
+    public ResponseEntity getThisWeekGames() {
+        List<GameDto.WithLocation> gameList = gameFacadeService.getThisWeekGames();
+        return new ResponseEntity<>(new MultiResponseDto<>(gameList), HttpStatus.OK);
+    }
+
+    @GetMapping("/games/{gameId}")
+    public ResponseEntity getGameWithAssignedSeats(@PathVariable Long gameId, @RequestParam(defaultValue = "") String seatPosition) {
+        GameDto.WithSeatList response = gameFacadeService.getGameWithSeatList(gameId, seatPosition);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/teams/{teamId}/games")
+    public ResponseEntity getGamesByTeam(@PathVariable long teamId, @RequestParam(defaultValue = "1") int page) {
+        Page<Game> gamePage = gameFacadeService.getGamesByTeam(page, teamId);
+        List<GameDto.Res> gameList = GameDto.toResList(gamePage.getContent());
+        return new ResponseEntity<>(new MultiResponseDto<>(gameList, gamePage), HttpStatus.OK);
+    }
+
+    @PostMapping("/admin/games")
+    public ResponseEntity createGame(@Valid @RequestBody GameDto.Req dto) {
+        gameFacadeService.createGame(dto);
+        String response = "경기가 생성되었습니다.";
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/admin/games/{gameId}")
+    public ResponseEntity updateGame(@PathVariable Long gameId, @Valid @RequestBody GameDto.ModifyInfoReq dto) {
+        gameFacadeService.modifyGame(gameId, dto);
+        String response = "경기정보가 변경되었습니다.";
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping({"/admin/games", "/games/sports"})
+    public ResponseEntity getGamesBySport(@RequestParam(defaultValue = "") String sport, @RequestParam(defaultValue = "1") int page) {
+        Page<Game> gamePage = gameFacadeService.getGamesBySport(page, sport);
+        List<GameDto.Res> gameList = GameDto.toResList(gamePage.getContent());
+        return new ResponseEntity<>(new MultiResponseDto<>(gameList, gamePage), HttpStatus.OK);
+    }
+
+    @GetMapping("/admin/games/{gameId}")
+    public ResponseEntity getGame(@PathVariable Long gameId) {
+        GameDto.Res response = gameFacadeService.getGame(gameId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/admin/games/{gameId}")
+    public ResponseEntity deleteGame(@PathVariable Long gameId) {
+        gameFacadeService.deleteGame(gameId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+}
