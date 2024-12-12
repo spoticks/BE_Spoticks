@@ -1,30 +1,34 @@
 package spoticks.ticket_reservation.global.security;
 
 import io.jsonwebtoken.*;
-import lombok.Getter;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import spoticks.ticket_reservation.global.auth.CustomUserDetails;
+import spoticks.ticket_reservation.global.auth.entity.RefreshToken;
+import spoticks.ticket_reservation.global.auth.service.LogoutAccessTokenService;
 import spoticks.ticket_reservation.global.error.ErrorCode;
 import spoticks.ticket_reservation.global.error.exception.JwtAuthenticationException;
 
-import java.util.Base64;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public class JwtTokenizer {
 
     @Value("${jwt.secret}")
-    @Getter
     private String JWT_SECRET;
 
-    private final long JWT_EXPIRATION = 1800000L; // 30분
+    public static final long ACCESS_TOKEN_EXPIRE = 1000L * 60 * 2; // 5분
+    public static final long REFRESH_TOKEN_EXPIRE = 1000L * 60 * 3; // 7분
 
-    public String generateToken(Authentication authentication) {
-        CustomUserDetails userPrincipal = (CustomUserDetails) authentication.getPrincipal();
+    private final LogoutAccessTokenService logoutAccessTokenService;
+
+    public String generateToken(CustomUserDetails userPrincipal, long expirationTime) {
         Map<String, Object> claims = new HashMap<>();
 
         claims.put("memberId", userPrincipal.getId());
@@ -35,35 +39,84 @@ public class JwtTokenizer {
                 .setClaims(claims)
                 .setSubject(userPrincipal.getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime() + JWT_EXPIRATION))
+                .setExpiration(new Date(new Date().getTime() + expirationTime))
                 .signWith(SignatureAlgorithm.HS512, encodeBase64(JWT_SECRET))
                 .compact();
     }
 
-    public String getUsernameFromJWT(String token) {
+    public Claims parseClaims(String token) {
         return Jwts.parser()
                 .setSigningKey(encodeBase64(JWT_SECRET))
                 .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+                .getBody();
     }
 
-    public boolean validateToken(String authToken) {
+    public boolean verifyToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(encodeBase64(JWT_SECRET)).parseClaimsJws(authToken);
+            validateToken(authToken);
+
+            if (checkLogout(authToken)) {
+                throwJwtException(ErrorCode.TOKEN_EXPIRED);
+            }
+
             return true;
-        } catch (SignatureException ex) {
-            throw new JwtAuthenticationException(ErrorCode.INVALID_SIGNATURE);
-        } catch (MalformedJwtException ex) {
-            throw new JwtAuthenticationException(ErrorCode.MALFORMED_TOKEN);
-        } catch (ExpiredJwtException ex) {
-            throw new JwtAuthenticationException(ErrorCode.TOKEN_EXPIRED);
+        } catch (JwtException ex) {
+            handleJwtException(ex);
+        }
+
+        return false;
+    }
+
+    public String resolveToken(String token) {
+        if(token != null && token.startsWith("Bearer ")) {
+            return token.substring(7);
+        }
+        return null;
+    }
+
+    public long getRemainTime(String authToken) {
+        Date expiration = parseClaims(authToken).getExpiration();
+        Date now = new Date();
+        return expiration.getTime() - now.getTime();
+    }
+
+    public void setRefreshTokenAtCookie(RefreshToken refreshToken) {
+        Cookie cookie = new Cookie("RefreshToken", refreshToken.getRefreshToken());
+        cookie.setHttpOnly(true);
+        // cookie.setSecure(true); HTTPS 적용
+        cookie.setMaxAge(refreshToken.getExpiration().intValue());
+        cookie.setAttribute("SameSite", "Strict");
+        HttpServletResponse response = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder
+                .getRequestAttributes())).getResponse();
+        Objects.requireNonNull(response).addCookie(cookie);
+    }
+
+    private void handleJwtException(JwtException ex) {
+        if (ex instanceof SignatureException) {
+            throwJwtException(ErrorCode.INVALID_SIGNATURE);
+        } else if (ex instanceof MalformedJwtException) {
+            throwJwtException(ErrorCode.MALFORMED_TOKEN);
+        } else if (ex instanceof ExpiredJwtException) {
+            throwJwtException(ErrorCode.TOKEN_EXPIRED);
+        } else {
+            throw new JwtAuthenticationException(ErrorCode.UNAUTHORIZED);
         }
     }
 
-    // JWT Base64 인코딩
-    public String encodeBase64(String input) {
+    private void throwJwtException(ErrorCode errorCode) {
+        throw new JwtAuthenticationException(errorCode);
+    }
+
+    private String encodeBase64(String input) {
         return Base64.getEncoder().encodeToString(input.getBytes());
+    }
+
+    private void validateToken(String authToken) {
+        Jwts.parser().setSigningKey(encodeBase64(JWT_SECRET)).parseClaimsJws(authToken);
+    }
+
+    private boolean checkLogout(String accessToken) {
+        return logoutAccessTokenService.existsLogoutAccessTokenById(accessToken);
     }
 
 }
