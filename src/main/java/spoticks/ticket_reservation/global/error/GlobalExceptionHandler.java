@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -58,6 +59,13 @@ public class GlobalExceptionHandler {
         final ErrorCode errorCode = ex.getErrorCode();
         final ErrorResponse response = ErrorResponse.of(errorCode);
         return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
+    }
+
+    @ExceptionHandler(MissingRequestCookieException.class)
+    protected ResponseEntity<ErrorResponse> handleMissingRequestCookieException(final MissingRequestCookieException ex) {
+        log.error("handleMissingRequestCookieException", ex);
+        final ErrorResponse response = ErrorResponse.of(ErrorCode.EMPTY_TOKEN);
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(Exception.class)

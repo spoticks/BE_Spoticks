@@ -20,6 +20,8 @@ public enum ErrorCode {
     TOKEN_EXPIRED(401, "JWT Token expired"),
     UNSUPPORTED_TOKEN(401, "Unsupported Token"),
     EMPTY_TOKEN(401, "JWT Token is empty"),
+    TOKEN_NOT_FOUND(404, "JWT Token does not exist"),
+    MISMATCH_TOKEN(401, "JWT Token does not match"),
 
     // Member
     MEMBER_NOT_FOUND(404, "Member Not Found"),
