@@ -42,6 +42,7 @@ public enum ErrorCode {
     // Seat
     SEAT_ALREADY_SELECTED(400, "Seat already selected"),
     SEAT_TIMEOUT(400, "Seat occupancy time has ended"),
+    SEAT_NOT_FOUND(404, "Seat Not Found"),
     ;
 
     private final int status;
