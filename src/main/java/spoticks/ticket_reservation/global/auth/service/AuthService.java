@@ -3,12 +3,12 @@ package spoticks.ticket_reservation.global.auth.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import spoticks.ticket_reservation.global.auth.AuthResponse;
-import spoticks.ticket_reservation.global.auth.CustomUserDetails;
-import spoticks.ticket_reservation.global.auth.CustomUserDetailsService;
+import spoticks.ticket_reservation.global.auth.dto.AuthResponse;
+import spoticks.ticket_reservation.global.auth.entity.CustomUserDetails;
 import spoticks.ticket_reservation.global.auth.entity.LogoutAccessToken;
 import spoticks.ticket_reservation.global.auth.entity.RefreshToken;
 import spoticks.ticket_reservation.global.auth.exception.TokenCheckFailException;
+import spoticks.ticket_reservation.global.config.JwtConfig;
 import spoticks.ticket_reservation.global.error.ErrorCode;
 import spoticks.ticket_reservation.global.security.JwtTokenizer;
 
@@ -18,14 +18,14 @@ import spoticks.ticket_reservation.global.security.JwtTokenizer;
 public class AuthService {
 
     private final JwtTokenizer jwtTokenizer;
+    private final JwtConfig jwtConfig;
     private final RefreshTokenService refreshTokenService;
     private final LogoutAccessTokenService logoutAccessTokenService;
     private final CustomUserDetailsService userService;
 
-
     public AuthResponse login(CustomUserDetails user) {
-        String accessToken = jwtTokenizer.generateToken(user, JwtTokenizer.ACCESS_TOKEN_EXPIRE);
-        RefreshToken refreshToken = refreshTokenService.saveRefreshToken(user, JwtTokenizer.REFRESH_TOKEN_EXPIRE);
+        String accessToken = jwtTokenizer.generateToken(user, jwtConfig.getAccessTokenExpire());
+        RefreshToken refreshToken = refreshTokenService.saveRefreshToken(user, jwtConfig.getRefreshTokenExpire());
         jwtTokenizer.setRefreshTokenAtCookie(refreshToken);
         return new AuthResponse(accessToken);
     }
@@ -46,7 +46,7 @@ public class AuthService {
         }
 
         String accessToken = jwtTokenizer.generateToken(
-                userService.loadUserByUsername(username), JwtTokenizer.ACCESS_TOKEN_EXPIRE);
+                userService.loadUserByUsername(username), jwtConfig.getAccessTokenExpire());
         return new AuthResponse(accessToken);
     }
 
