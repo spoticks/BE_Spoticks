@@ -2,7 +2,7 @@ package spoticks.ticket_reservation.global.auth.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import spoticks.ticket_reservation.global.auth.CustomUserDetails;
+import spoticks.ticket_reservation.global.auth.entity.CustomUserDetails;
 import spoticks.ticket_reservation.global.auth.entity.RefreshToken;
 import spoticks.ticket_reservation.global.auth.exception.TokenCheckFailException;
 import spoticks.ticket_reservation.global.auth.repository.RefreshTokenRepository;

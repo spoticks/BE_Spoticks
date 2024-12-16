@@ -27,9 +27,7 @@ public class GameService {
 
     @Transactional(readOnly = true)
     public Game findById(Long id) {
-        final Optional<Game> game = gameRepository.findById(id);
-        game.orElseThrow(GameNotFoundException::new);
-        return game.get();
+        return gameRepository.findById(id).orElseThrow(GameNotFoundException::new);
     }
 
     @Transactional(readOnly = true)

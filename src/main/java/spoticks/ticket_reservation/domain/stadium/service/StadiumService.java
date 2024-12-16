@@ -7,8 +7,6 @@ import spoticks.ticket_reservation.domain.stadium.entity.Stadium;
 import spoticks.ticket_reservation.domain.stadium.repository.StadiumRepository;
 import spoticks.ticket_reservation.global.error.exception.EntityNotFoundException;
 
-import java.util.Optional;
-
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -17,15 +15,13 @@ public class StadiumService {
     private final StadiumRepository stadiumRepository;
 
     public Stadium findById(Long id) {
-        final Optional<Stadium> stadium = stadiumRepository.findById(id);
-        stadium.orElseThrow(() -> new EntityNotFoundException("Stadium not found"));
-        return stadium.get();
+        return stadiumRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Stadium with id " + id + " not found"));
     }
 
     public Stadium findByStadiumName(String stadiumName) {
-        final Optional<Stadium> stadium = stadiumRepository.findByStadiumName(stadiumName);
-        stadium.orElseThrow(() -> new EntityNotFoundException("Stadium not found"));
-        return stadium.get();
+        return stadiumRepository.findByStadiumName(stadiumName)
+            .orElseThrow(() -> new EntityNotFoundException("Stadium with name " + stadiumName + " not found"));
     }
 
 }
