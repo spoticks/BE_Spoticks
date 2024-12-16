@@ -12,4 +12,8 @@ public class EntityNotFoundException extends BusinessException {
         super(message, errorCode);
     }
 
+    public EntityNotFoundException(ErrorCode errorCode) {
+        super(errorCode);
+    }
+
 }
