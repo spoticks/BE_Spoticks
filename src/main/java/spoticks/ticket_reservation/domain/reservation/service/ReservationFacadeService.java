@@ -14,10 +14,12 @@ import spoticks.ticket_reservation.domain.reservation.entity.Reservation;
 import spoticks.ticket_reservation.domain.reservation.entity.ReservationStatus;
 import spoticks.ticket_reservation.domain.reservation.exception.CancellationPeriodExpiredException;
 import spoticks.ticket_reservation.domain.seat.entity.Seat;
-import spoticks.ticket_reservation.domain.seat.exception.SeatAlreadySelectedException;
+import spoticks.ticket_reservation.domain.seat.exception.SeatPreemptException;
+import spoticks.ticket_reservation.domain.seat.service.SeatPreemptionService;
 import spoticks.ticket_reservation.domain.seat.service.SeatService;
+import spoticks.ticket_reservation.global.error.ErrorCode;
 import spoticks.ticket_reservation.global.error.exception.AccessDeniedException;
-import spoticks.ticket_reservation.global.auth.AuthorizationUtil;
+import spoticks.ticket_reservation.global.auth.service.AuthorizationUtil;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -30,18 +32,21 @@ public class ReservationFacadeService {
 
     private final ReservationService reservationService;
     private final SeatService seatService;
+    private final SeatPreemptionService preemptionService;
     private final GameService gameService;
     private final MemberService memberService;
 
     public void preemptSeatList(long gameId, List<Long> seatIds) {
         for (long seatId : seatIds) {
             if (!seatService.isSeatAvailable(seatId)) {
-                throw new SeatAlreadySelectedException();
+                throw new SeatPreemptException(ErrorCode.SEAT_ALREADY_SELECTED);
             }
         }
 
+        long memberId = AuthorizationUtil.getMemberId();
+
         for (long seatId : seatIds) {
-            seatService.preemptSeat(seatId);
+            preemptionService.preemptSeat(String.valueOf(seatId), memberId);
         }
     }
 
@@ -52,16 +57,18 @@ public class ReservationFacadeService {
             throw new GameTimeOutOfBoundException();
         }
 
+        long memberId = AuthorizationUtil.getMemberId();
+        final Member member = memberService.findById(memberId);
+
         List<Seat> seatList = new ArrayList<>();
 
         for (long seatId : dto.getSeatIds()) {
+            preemptionService.verifyPreemptionMember(String.valueOf(seatId), memberId);
             Seat seat = seatService.findById(seatId);
             seatService.reserveSeat(seat);
             seatList.add(seat);
         }
 
-        long memberId = AuthorizationUtil.getMemberId();
-        final Member member = memberService.findById(memberId);
         reservationService.saveReservation(dto.toEntity(member, game, seatList));
     }
 
