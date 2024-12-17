@@ -11,8 +11,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import spoticks.ticket_reservation.global.auth.CustomUserDetails;
-import spoticks.ticket_reservation.global.auth.CustomUserDetailsService;
+import spoticks.ticket_reservation.global.auth.entity.CustomUserDetails;
+import spoticks.ticket_reservation.global.auth.service.CustomUserDetailsService;
 import spoticks.ticket_reservation.global.error.exception.AccessDeniedException;
 import spoticks.ticket_reservation.global.error.exception.JwtAuthenticationException;
 

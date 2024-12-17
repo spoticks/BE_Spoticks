@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import spoticks.ticket_reservation.global.auth.CustomUserDetails;
+import spoticks.ticket_reservation.global.auth.entity.CustomUserDetails;
 import spoticks.ticket_reservation.global.auth.entity.RefreshToken;
 import spoticks.ticket_reservation.global.auth.service.LogoutAccessTokenService;
 import spoticks.ticket_reservation.global.error.ErrorCode;
@@ -22,9 +22,6 @@ public class JwtTokenizer {
 
     @Value("${jwt.secret}")
     private String JWT_SECRET;
-
-    public static final long ACCESS_TOKEN_EXPIRE = 1000L * 60 * 2; // 5분
-    public static final long REFRESH_TOKEN_EXPIRE = 1000L * 60 * 3; // 7분
 
     private final LogoutAccessTokenService logoutAccessTokenService;
 
@@ -83,9 +80,9 @@ public class JwtTokenizer {
     public void setRefreshTokenAtCookie(RefreshToken refreshToken) {
         Cookie cookie = new Cookie("RefreshToken", refreshToken.getRefreshToken());
         cookie.setHttpOnly(true);
-        // cookie.setSecure(true); HTTPS 적용
+        cookie.setSecure(true);
+        cookie.setAttribute("SameSite", "None");
         cookie.setMaxAge(refreshToken.getExpiration().intValue());
-        cookie.setAttribute("SameSite", "Strict");
         HttpServletResponse response = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder
                 .getRequestAttributes())).getResponse();
         Objects.requireNonNull(response).addCookie(cookie);
