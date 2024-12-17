@@ -1,4 +1,4 @@
-package spoticks.ticket_reservation.global.auth;
+package spoticks.ticket_reservation.global.auth.entity;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

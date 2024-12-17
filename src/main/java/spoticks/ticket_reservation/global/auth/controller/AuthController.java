@@ -1,6 +1,6 @@
-package spoticks.ticket_reservation.global.auth;
+package spoticks.ticket_reservation.global.auth.controller;
 
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -8,22 +8,20 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
+import spoticks.ticket_reservation.global.auth.dto.AuthRequest;
+import spoticks.ticket_reservation.global.auth.dto.AuthResponse;
+import spoticks.ticket_reservation.global.auth.entity.CustomUserDetails;
 import spoticks.ticket_reservation.global.auth.service.AuthService;
 import spoticks.ticket_reservation.global.error.ErrorCode;
 import spoticks.ticket_reservation.global.error.ErrorResponse;
 
-
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final AuthService authService;
-
-    public AuthController(AuthenticationManager authenticationManager, AuthService authService) {
-        this.authenticationManager = authenticationManager;
-        this.authService = authService;
-    }
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody AuthRequest authRequest) {
