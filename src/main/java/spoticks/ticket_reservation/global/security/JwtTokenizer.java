@@ -81,6 +81,7 @@ public class JwtTokenizer {
         Cookie cookie = new Cookie("RefreshToken", refreshToken.getRefreshToken());
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
+        cookie.setPath("/");
         cookie.setAttribute("SameSite", "None");
         cookie.setMaxAge(refreshToken.getExpiration().intValue());
         HttpServletResponse response = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder
