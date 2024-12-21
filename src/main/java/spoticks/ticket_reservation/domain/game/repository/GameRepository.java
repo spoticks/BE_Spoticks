@@ -19,6 +19,8 @@ public interface GameRepository extends JpaRepository<Game, Long> {
 
     Page<Game> findBySport(Sport sport, Pageable pageable);
 
+    Page<Game> findBySportAndTimeOffSaleAfter(Sport sport, ZonedDateTime timeOffSaleAfter, Pageable pageable);
+
     Page<Game> findByHomeTeamOrAwayTeamOrderByGameStartTime(Team homeTeam, Team awayTeam, Pageable pageable);
 
 }
