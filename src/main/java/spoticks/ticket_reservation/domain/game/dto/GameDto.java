@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import spoticks.ticket_reservation.domain.game.entity.Game;
+import spoticks.ticket_reservation.domain.game.entity.LeagueSeason;
 import spoticks.ticket_reservation.domain.seat.entity.Seat;
 import spoticks.ticket_reservation.domain.sport.entity.Sport;
 import spoticks.ticket_reservation.domain.stadium.entity.Stadium;
@@ -54,6 +55,7 @@ public class GameDto {
 
         private Stadium stadium;
         private Sport sport;
+        private LeagueSeason season;
         private Team homeTeam;
         private Team awayTeam;
         private ZonedDateTime gameStartTime;
