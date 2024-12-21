@@ -48,9 +48,15 @@ public class GameService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Game> findGamesBySport(int page, Sport sport) {
-        return gameRepository.findBySport(sport, PageRequest.of(
-                page - 1, PAGE_SIZE, Sort.by("gameStartTime").ascending()));
+    public Page<Game> findGamesBySport(int page, Sport sport, boolean includePastGames) {
+        if (includePastGames) {
+            return gameRepository.findBySport(sport, PageRequest.of(
+                    page - 1, PAGE_SIZE, Sort.by("gameStartTime").ascending()));
+        } else {
+            ZonedDateTime now = ZonedDateTime.now();
+            return gameRepository.findBySportAndTimeOffSaleAfter(sport, now, PageRequest.of(
+                    page - 1, PAGE_SIZE, Sort.by("gameStartTime").ascending()));
+        }
     }
 
     @Transactional(readOnly = true)
