@@ -65,9 +65,16 @@ public class GameController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping({"/admin/games", "/games/sports"})
+    @GetMapping("/admin/games")
     public ResponseEntity getGamesBySport(@RequestParam(defaultValue = "") String sport, @RequestParam(defaultValue = "1") int page) {
-        Page<Game> gamePage = gameFacadeService.getGamesBySport(page, sport);
+        Page<Game> gamePage = gameFacadeService.getAllGamesBySport(page, sport);
+        List<GameDto.Res> gameList = GameDto.toResList(gamePage.getContent());
+        return new ResponseEntity<>(new MultiResponseDto<>(gameList, gamePage), HttpStatus.OK);
+    }
+
+    @GetMapping("/games/sports")
+    public ResponseEntity getUpcomingMatchesBySport(@RequestParam String sport, @RequestParam(defaultValue = "1") int page) {
+        Page<Game> gamePage = gameFacadeService.getUpcomingGamesBySport(page, sport);
         List<GameDto.Res> gameList = GameDto.toResList(gamePage.getContent());
         return new ResponseEntity<>(new MultiResponseDto<>(gameList, gamePage), HttpStatus.OK);
     }
