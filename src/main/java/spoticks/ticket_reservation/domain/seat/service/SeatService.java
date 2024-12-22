@@ -55,12 +55,6 @@ public class SeatService {
         }
     }
 
-    public void preemptSeat(long seatId) {
-        Seat seat = findById(seatId);
-        seat.preempt();
-        seatRepository.save(seat);
-    }
-
     public void reserveSeat(Seat seat) {
         seat.complete();
         seatRepository.save(seat);
