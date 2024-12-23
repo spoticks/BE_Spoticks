@@ -45,9 +45,19 @@ public class AuthService {
             throw new TokenCheckFailException(ErrorCode.MISMATCH_TOKEN);
         }
 
-        String accessToken = jwtTokenizer.generateToken(
-                userService.loadUserByUsername(username), jwtConfig.getAccessTokenExpire());
+        CustomUserDetails user = userService.loadUserByUsername(username);
+
+        if (isRefreshTokenNearExpiry(refreshToken)) {
+            RefreshToken newRefreshToken = refreshTokenService.saveRefreshToken(user, jwtConfig.getRefreshTokenExpire());
+            jwtTokenizer.setRefreshTokenAtCookie(newRefreshToken);
+        }
+
+        String accessToken = jwtTokenizer.generateToken(user, jwtConfig.getAccessTokenExpire());
         return new AuthResponse(accessToken);
+    }
+
+    private boolean isRefreshTokenNearExpiry(String refreshToken) {
+        return jwtTokenizer.getRemainTime(refreshToken) < jwtConfig.getRefreshTokenReissue();
     }
 
 }
