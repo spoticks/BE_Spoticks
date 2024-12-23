@@ -3,6 +3,8 @@ package spoticks.ticket_reservation.domain.game.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import spoticks.ticket_reservation.domain.game.entity.Game;
 import spoticks.ticket_reservation.domain.sport.entity.Sport;
 import spoticks.ticket_reservation.domain.team.entity.Team;
@@ -21,6 +23,13 @@ public interface GameRepository extends JpaRepository<Game, Long> {
 
     Page<Game> findBySportAndTimeOffSaleAfter(Sport sport, ZonedDateTime timeOffSaleAfter, Pageable pageable);
 
-    Page<Game> findByHomeTeamOrAwayTeamOrderByGameStartTime(Team homeTeam, Team awayTeam, Pageable pageable);
+    Page<Game> findByHomeTeamAndTimeOffSaleAfter(Team homeTeam, ZonedDateTime timeOffSaleAfter, Pageable pageable);
+
+    @Query("SELECT g FROM Game g " +
+            "WHERE g.timeOffSale > :timeOffSaleAfter " +
+            "AND (g.homeTeam = :homeTeam OR g.awayTeam = :awayTeam)")
+    Page<Game> findByHomeTeamOrAwayTeamAndTimeOffSaleAfter(@Param("timeOffSaleAfter") ZonedDateTime timeOffSaleAfter,
+                                                           @Param("homeTeam") Team homeTeam,
+                                                           @Param("awayTeam") Team awayTeam, Pageable pageable);
 
 }

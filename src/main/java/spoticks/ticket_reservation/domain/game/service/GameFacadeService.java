@@ -115,9 +115,9 @@ public class GameFacadeService {
         return gameService.findGamesBySport(page, sport, false);
     }
 
-    public Page<Game> getGamesByTeam(int page, long teamId) {
+    public Page<Game> getUpcomingGamesByTeam(int page, long teamId, boolean onlyHomeGames) {
         Team team = teamService.findById(teamId);
-        return gameService.findGamesByTeam(page, team);
+        return gameService.findGamesByTeam(page, team, onlyHomeGames);
     }
 
     public void deleteGame(long gameId) {

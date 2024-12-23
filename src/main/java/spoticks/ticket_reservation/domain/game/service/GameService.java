@@ -24,6 +24,7 @@ public class GameService {
 
     private final GameRepository gameRepository;
     private final int PAGE_SIZE = 8;
+    private final Sort DEFAULT_SORT = Sort.by("gameStartTime").ascending();
 
     @Transactional(readOnly = true)
     public Game findById(Long id) {
@@ -44,25 +45,31 @@ public class GameService {
 
     public Page<Game> getAllGames(int page) {
         return gameRepository.findAll(PageRequest.of(
-                page - 1, PAGE_SIZE, Sort.by("gameStartTime").ascending()));
+                page - 1, PAGE_SIZE, DEFAULT_SORT));
     }
 
     @Transactional(readOnly = true)
     public Page<Game> findGamesBySport(int page, Sport sport, boolean includePastGames) {
         if (includePastGames) {
             return gameRepository.findBySport(sport, PageRequest.of(
-                    page - 1, PAGE_SIZE, Sort.by("gameStartTime").ascending()));
+                    page - 1, PAGE_SIZE, DEFAULT_SORT));
         } else {
             ZonedDateTime now = ZonedDateTime.now();
             return gameRepository.findBySportAndTimeOffSaleAfter(sport, now, PageRequest.of(
-                    page - 1, PAGE_SIZE, Sort.by("gameStartTime").ascending()));
+                    page - 1, PAGE_SIZE, DEFAULT_SORT));
         }
     }
 
     @Transactional(readOnly = true)
-    public Page<Game> findGamesByTeam(int page, Team team) {
-        return gameRepository.findByHomeTeamOrAwayTeamOrderByGameStartTime(
-                team, team, PageRequest.of(page - 1, PAGE_SIZE, Sort.by("gameStartTime").ascending()));
+    public Page<Game> findGamesByTeam(int page, Team team, boolean onlyHomeGames) {
+        ZonedDateTime now = ZonedDateTime.now();
+        if (onlyHomeGames) {
+            return gameRepository.findByHomeTeamAndTimeOffSaleAfter(
+                    team, now, PageRequest.of(page - 1, PAGE_SIZE, DEFAULT_SORT));
+        } else {
+            return gameRepository.findByHomeTeamOrAwayTeamAndTimeOffSaleAfter(
+                    now, team, team, PageRequest.of(page - 1, PAGE_SIZE, DEFAULT_SORT));
+        }
     }
 
     public void saveGame(Game game) {
