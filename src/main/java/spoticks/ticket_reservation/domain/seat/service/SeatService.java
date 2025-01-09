@@ -44,7 +44,6 @@ public class SeatService {
                 for (int c = 1; c <= COL; c++) {
                     Seat seat = Seat.builder()
                             .game(game)
-                            .seatPrice(section.getPrice())
                             .seatPosition(section.getSeatPosition())
                             .seatRow(r)
                             .seatNumber(num++)
