@@ -49,6 +49,10 @@ public class JwtTokenizer {
     }
 
     public boolean verifyToken(String authToken) {
+        if (authToken == null) {
+            throwJwtException(ErrorCode.EMPTY_TOKEN);
+        }
+
         try {
             validateToken(authToken);
 
