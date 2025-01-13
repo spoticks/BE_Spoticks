@@ -40,7 +40,8 @@ public class GameService {
     @Transactional(readOnly = true)
     public List<Game> findGamesByTimeOffSale() {
         ZonedDateTime now = ZonedDateTime.now();
-        return gameRepository.findByTimeOffSaleBetween(now.plusMinutes(30), now.plusDays(6));
+        Sort sort = Sort.by(Sort.Direction.ASC, "gameStartTime");
+        return gameRepository.findByTimeOffSaleBetween(now.plusMinutes(30), now.plusDays(6), sort);
     }
 
     public Page<Game> getAllGames(int page) {

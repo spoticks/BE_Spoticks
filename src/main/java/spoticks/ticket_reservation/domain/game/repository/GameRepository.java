@@ -2,6 +2,7 @@ package spoticks.ticket_reservation.domain.game.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,7 +18,7 @@ public interface GameRepository extends JpaRepository<Game, Long> {
 
     Optional<Game> findFirstByTimeOnSaleBeforeAndTimeOffSaleAfter(ZonedDateTime timeOnSaleBefore, ZonedDateTime timeOffSaleAfter);
 
-    List<Game> findByTimeOffSaleBetween(ZonedDateTime start, ZonedDateTime end);
+    List<Game> findByTimeOffSaleBetween(ZonedDateTime start, ZonedDateTime end, Sort sort);
 
     Page<Game> findBySport(Sport sport, Pageable pageable);
 
