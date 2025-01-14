@@ -64,19 +64,19 @@ public class MemberController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("/myteam/{teamId}")
+    @PostMapping("/my-team/{teamId}")
     public ResponseEntity addMyTeam(@PathVariable Long teamId) {
         memberFacadeService.addMyTeam(teamId);
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @DeleteMapping("/myteam/{teamId}")
+    @DeleteMapping("/my-team/{teamId}")
     public ResponseEntity deleteMyTeam(@PathVariable Long teamId) {
         memberFacadeService.deleteMyTeam(teamId);
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping("/myteam")
+    @GetMapping("/my-team")
     public ResponseEntity getMyTeam() {
         List<Team> response = memberFacadeService.getMyTeams();
         return new ResponseEntity<>(response, HttpStatus.OK);

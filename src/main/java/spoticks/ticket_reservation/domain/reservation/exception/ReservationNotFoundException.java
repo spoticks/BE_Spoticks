@@ -6,7 +6,7 @@ import spoticks.ticket_reservation.global.error.exception.EntityNotFoundExceptio
 public class ReservationNotFoundException extends EntityNotFoundException {
 
     public ReservationNotFoundException() {
-        super("Reservation not found", ErrorCode.RESERVATION_NOT_FOUND);
+        super(ErrorCode.RESERVATION_NOT_FOUND);
     }
 
 }

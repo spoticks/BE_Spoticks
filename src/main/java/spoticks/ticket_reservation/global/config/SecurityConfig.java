@@ -12,7 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import spoticks.ticket_reservation.global.auth.CustomUserDetailsService;
+import spoticks.ticket_reservation.global.auth.service.CustomUserDetailsService;
 import spoticks.ticket_reservation.global.security.JwtAuthenticationFilter;
 import spoticks.ticket_reservation.global.security.JwtEntryPoint;
 
@@ -46,12 +46,12 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login", "/auth/reissue/{username}", "/join", "/join/**",
-                                "/teams/{teamId}/games", "teams/{teamId}/stadium",  "/games/mostPopular", "/games/weekly", "/games/sports").permitAll()
-                        .requestMatchers("/members", "/members/me", "/members/password", "/myteam", "/myteam/{teamId}",
-                                "/reservation", "/reservation/{reservationId}",
-                                "/games/{gameId}/preempt", "/games/{gameId}/reserve", "/games/{gameId}",
-                                "/auth/logout", "/admin/games/**").authenticated()
+                        .requestMatchers("/auth/login", "/auth/reissue/*", "/join", "/join/phone-number", "/join/user-name",
+                                "/teams/*/games", "/teams/*/stadium",  "/games/mostPopular", "/games/weekly", "/games/sports").permitAll()
+                        .requestMatchers("/members", "/members/me", "/members/password", "/my-team", "/my-team/*",
+                                "/reservation", "/reservation/*",
+                                "/games/*/preempt", "/games/*/reserve", "/games/*",
+                                "/auth/logout", "/admin/games", "/admin/games/*").authenticated()
                         .anyRequest().denyAll())
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtEntryPoint))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

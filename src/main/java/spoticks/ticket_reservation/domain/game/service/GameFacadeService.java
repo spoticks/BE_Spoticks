@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import spoticks.ticket_reservation.domain.game.dto.GameDto;
 import spoticks.ticket_reservation.domain.game.entity.Game;
+import spoticks.ticket_reservation.domain.game.entity.LeagueSeason;
 import spoticks.ticket_reservation.domain.game.exception.GameTimeOutOfBoundException;
 import spoticks.ticket_reservation.domain.game.exception.HomeAndAwaySameException;
 import spoticks.ticket_reservation.domain.seat.service.SeatService;
@@ -40,6 +41,7 @@ public class GameFacadeService {
         Game newGame = Game.builder()
                 .stadium(stadium)
                 .sport(sportService.findBySportName(dto.getSport()))
+                .season(getLeagueSeason(dto.getSport()))
                 .homeTeam(teamService.findById(dto.getHomeTeamId()))
                 .awayTeam(teamService.findById(dto.getAwayTeamId()))
                 .gameStartTime(dto.getGameStartTime())
@@ -90,6 +92,7 @@ public class GameFacadeService {
         GameDto.ModifyInfoRes res = GameDto.ModifyInfoRes.builder()
                 .stadium(stadiumService.findByStadiumName(dto.getStadiumName()))
                 .sport(sportService.findBySportName(dto.getSport()))
+                .season(getLeagueSeason(dto.getSport()))
                 .homeTeam(teamService.findById(dto.getHomeTeamId()))
                 .awayTeam(teamService.findById(dto.getAwayTeamId()))
                 .gameStartTime(dto.getGameStartTime())
@@ -98,18 +101,23 @@ public class GameFacadeService {
         gameService.saveGame(game);
     }
 
-    public Page<Game> getGamesBySport(int page, String sportName) {
+    public Page<Game> getAllGamesBySport(int page, String sportName) {
         if (sportName.isEmpty()) {
             return gameService.getAllGames(page);
         } else {
             Sport sport = sportService.findBySportName(sportName);
-            return gameService.findGamesBySport(page, sport);
+            return gameService.findGamesBySport(page, sport, true);
         }
     }
 
-    public Page<Game> getGamesByTeam(int page, long teamId) {
+    public Page<Game> getUpcomingGamesBySport(int page, String sportName) {
+        Sport sport = sportService.findBySportName(sportName);
+        return gameService.findGamesBySport(page, sport, false);
+    }
+
+    public Page<Game> getUpcomingGamesByTeam(int page, long teamId, boolean onlyHomeGames) {
         Team team = teamService.findById(teamId);
-        return gameService.findGamesByTeam(page, team);
+        return gameService.findGamesByTeam(page, team, onlyHomeGames);
     }
 
     public void deleteGame(long gameId) {
@@ -117,8 +125,18 @@ public class GameFacadeService {
         gameService.deleteGame(game);
     }
 
-    public boolean isSameTeam(long teamId1, long teamId2) {
+    private boolean isSameTeam(long teamId1, long teamId2) {
         return teamId1 == teamId2;
+    }
+
+    private LeagueSeason getLeagueSeason(String sportName) {
+        return switch (sportName) {
+            case "야구" -> LeagueSeason.KBO_2024;
+            case "축구" -> LeagueSeason.K1_2024;
+            case "농구" -> LeagueSeason.KBL_2024_25;
+            case "배구" -> LeagueSeason.V_2024_25;
+            default -> LeagueSeason.UNTITLED;
+        };
     }
 
 }

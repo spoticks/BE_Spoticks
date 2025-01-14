@@ -17,15 +17,14 @@ public class SportService {
     private final SportRepository sportRepository;
 
     public Sport findById(Long id) {
-        final Optional<Sport> sport = sportRepository.findById(id);
-        sport.orElseThrow(() -> new EntityNotFoundException("Sport not found"));
-        return sport.get();
+        return sportRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Sport with id " + id + " not found"));
+
     }
 
     public Sport findBySportName(String sportName) {
-        final Optional<Sport> sport = sportRepository.findBySportName(sportName);
-        sport.orElseThrow(() -> new EntityNotFoundException("Sport not found"));
-        return sport.get();
+        return sportRepository.findBySportName(sportName)
+            .orElseThrow(() -> new EntityNotFoundException("Sport with name " + sportName + " not found"));
     }
 
 }

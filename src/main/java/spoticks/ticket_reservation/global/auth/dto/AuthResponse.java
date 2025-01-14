@@ -1,4 +1,4 @@
-package spoticks.ticket_reservation.global.auth;
+package spoticks.ticket_reservation.global.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

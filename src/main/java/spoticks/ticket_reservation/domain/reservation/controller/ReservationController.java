@@ -19,7 +19,7 @@ public class ReservationController {
 
     private final ReservationFacadeService reservationFacadeService;
 
-    @GetMapping("/games/{gameId}/preempt")
+    @PostMapping("/games/{gameId}/preempt")
     public ResponseEntity preemptSeat(@PathVariable("gameId") Long gameId, @RequestBody ReservationDto.CheckSeat dto) {
         reservationFacadeService.preemptSeatList(gameId, dto.getSeatIds());
         return new ResponseEntity(HttpStatus.OK);

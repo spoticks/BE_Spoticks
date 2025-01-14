@@ -11,7 +11,6 @@ import spoticks.ticket_reservation.domain.seat.repository.SeatRepository;
 import spoticks.ticket_reservation.domain.stadium.entity.StadiumType;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -22,9 +21,7 @@ public class SeatService {
 
     @Transactional(readOnly = true)
     public Seat findById(Long id) {
-        final Optional<Seat> seat = seatRepository.findById(id);
-        seat.orElseThrow(SeatNotFoundException::new);
-        return seat.get();
+        return seatRepository.findById(id).orElseThrow(SeatNotFoundException::new);
     }
 
     @Transactional(readOnly = true)
@@ -47,7 +44,6 @@ public class SeatService {
                 for (int c = 1; c <= COL; c++) {
                     Seat seat = Seat.builder()
                             .game(game)
-                            .seatPrice(section.getPrice())
                             .seatPosition(section.getSeatPosition())
                             .seatRow(r)
                             .seatNumber(num++)
@@ -56,12 +52,6 @@ public class SeatService {
                 }
             }
         }
-    }
-
-    public void preemptSeat(long seatId) {
-        Seat seat = findById(seatId);
-        seat.preempt();
-        seatRepository.save(seat);
     }
 
     public void reserveSeat(Seat seat) {

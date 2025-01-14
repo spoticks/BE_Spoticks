@@ -11,8 +11,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import spoticks.ticket_reservation.global.auth.CustomUserDetails;
-import spoticks.ticket_reservation.global.auth.CustomUserDetailsService;
+import spoticks.ticket_reservation.global.auth.entity.CustomUserDetails;
+import spoticks.ticket_reservation.global.auth.service.CustomUserDetailsService;
 import spoticks.ticket_reservation.global.error.exception.AccessDeniedException;
 import spoticks.ticket_reservation.global.error.exception.JwtAuthenticationException;
 
@@ -29,10 +29,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        if (isPermitAllPath(request.getRequestURI())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         try {
             String jwt = getJwtFromRequest(request);
 
-            if (jwt != null && jwtTokenizer.verifyToken(jwt)) {
+            if (jwtTokenizer.verifyToken(jwt)) {
                 String username = jwtTokenizer.parseClaims(jwt).getSubject();
                 CustomUserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
@@ -70,6 +75,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return bearerToken.substring(7);
         }
         return null;
+    }
+
+    private boolean isPermitAllPath(String requestURI) {
+        return requestURI.startsWith("/auth/login") ||
+                requestURI.startsWith("/auth/reissue") ||
+                requestURI.startsWith("/join") ||
+                requestURI.startsWith("/games/mostPopular") ||
+                requestURI.startsWith("/games/weekly") ||
+                requestURI.startsWith("/games/sports") ||
+                requestURI.startsWith("/teams");
     }
 
 }

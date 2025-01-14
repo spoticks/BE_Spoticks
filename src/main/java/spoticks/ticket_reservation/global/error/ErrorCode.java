@@ -40,8 +40,10 @@ public enum ErrorCode {
     RESERVATION_NOT_FOUND(404, "Reservation Not Found"),
 
     // Seat
-    SEAT_ALREADY_SELECTED(400, "Seat already selected"),
+    SEAT_ALREADY_SELECTED(403, "Seat already selected"),
     SEAT_TIMEOUT(400, "Seat occupancy time has ended"),
+    SEAT_NOT_FOUND(404, "Seat Not Found"),
+    MISMATCHED_SEAT(403, "Seat does not match"),
     ;
 
     private final int status;

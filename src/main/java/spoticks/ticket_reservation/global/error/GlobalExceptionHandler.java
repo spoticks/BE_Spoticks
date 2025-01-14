@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import spoticks.ticket_reservation.global.error.exception.BusinessException;
 
 import java.nio.file.AccessDeniedException;
@@ -20,7 +21,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoHandlerFoundException.class)
     protected ResponseEntity<ErrorResponse> handleNoHandlerFoundException(final NoHandlerFoundException ex) {
-        log.error("handleMethodArgumentNotValidException", ex);
+        log.error("handleNoHandlerFoundException", ex);
+        final ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.PAGE_NOT_FOUND);
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    protected ResponseEntity<ErrorResponse> handleNoResourceFoundException(final NoResourceFoundException ex) {
+        log.error("handleNoResourceFoundException", ex);
         final ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.PAGE_NOT_FOUND);
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }

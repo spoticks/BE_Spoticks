@@ -11,8 +11,6 @@ import spoticks.ticket_reservation.domain.reservation.entity.ReservationStatus;
 import spoticks.ticket_reservation.domain.reservation.exception.ReservationNotFoundException;
 import spoticks.ticket_reservation.domain.reservation.repository.ReservationRepository;
 
-import java.util.Optional;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -22,9 +20,7 @@ public class ReservationService {
 
     @Transactional(readOnly = true)
     public Reservation findReservationById(Long id) {
-        final Optional<Reservation> reservation = reservationRepository.findById(id);
-        reservation.orElseThrow(ReservationNotFoundException::new);
-        return reservation.get();
+        return reservationRepository.findById(id).orElseThrow(ReservationNotFoundException::new);
     }
 
     @Transactional(readOnly = true)

@@ -34,6 +34,10 @@ public class Game extends BaseTimeEntity {
     @JoinColumn(name = "sport_id", nullable = false)
     private Sport sport;
 
+    @Column
+    @Enumerated(EnumType.STRING)
+    private LeagueSeason season;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "home_team_id", nullable = false)
     private Team homeTeam;
@@ -56,9 +60,10 @@ public class Game extends BaseTimeEntity {
     private List<Seat> seats = new ArrayList<>();
 
     @Builder
-    public Game(Stadium stadium, Sport sport, Team homeTeam, Team awayTeam, ZonedDateTime gameStartTime) {
+    public Game(Stadium stadium, Sport sport, LeagueSeason season, Team homeTeam, Team awayTeam, ZonedDateTime gameStartTime) {
         this.stadium = stadium;
         this.sport = sport;
+        this.season = season;
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
         this.gameStartTime = gameStartTime;

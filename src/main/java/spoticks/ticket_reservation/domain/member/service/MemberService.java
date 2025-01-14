@@ -7,8 +7,6 @@ import spoticks.ticket_reservation.domain.member.entity.Member;
 import spoticks.ticket_reservation.domain.member.exception.MemberNotFoundException;
 import spoticks.ticket_reservation.domain.member.repository.MemberRepository;
 
-import java.util.Optional;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -18,16 +16,7 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public Member findById(Long id) {
-        final Optional<Member> member = memberRepository.findById(id);
-        member.orElseThrow(MemberNotFoundException::new);
-        return member.get();
-    }
-
-    @Transactional(readOnly = true)
-    public Member findByUsername(String username) {
-        final Optional<Member> member = memberRepository.findByUserName(username);
-        member.orElseThrow(MemberNotFoundException::new);
-        return member.get();
+        return memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
     }
 
     @Transactional(readOnly = true)

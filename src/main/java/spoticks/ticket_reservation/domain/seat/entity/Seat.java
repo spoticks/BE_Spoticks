@@ -34,9 +34,6 @@ public class Seat {
     private SeatStatus status;
 
     @Column(nullable = false)
-    private int seatPrice;
-
-    @Column(nullable = false)
     private String seatPosition;
 
     @Column(nullable = false)
@@ -58,10 +55,9 @@ public class Seat {
     }
 
     @Builder
-    public Seat(Game game, int seatPrice, String seatPosition, int seatRow, int seatNumber) {
+    public Seat(Game game, String seatPosition, int seatRow, int seatNumber) {
         this.game = game;
         this.status = SeatStatus.AVAILABLE;
-        this.seatPrice = seatPrice;
         this.seatPosition = seatPosition;
         this.seatRow = seatRow;
         this.seatNumber = seatNumber;
